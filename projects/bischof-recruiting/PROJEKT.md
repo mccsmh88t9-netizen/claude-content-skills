@@ -57,7 +57,14 @@ Ton: Originalgeräusche aus dem Footage (Säge, Häcksler, Hydraulik) + Musik + 
 - ffmpeg, Playwright/Chromium (HTML-Frames rendern), Python mit PIL/numpy, `pip install rembg onnxruntime` für Freistellung.
 - Google Fonts/jsdelivr sind im Netz gesperrt; Schriften kamen von raw.githubusercontent.com.
 
+## Stand (03.11.2026)
+- Erledigt: Szenen 1–4 und 6–9 aus echtem Footage, Stil-Check pro Szene + Gesamtcheck (Kontaktbögen in `work/check/`). Szene 5 als Platzhalter mit finaler Schrift.
+- Pipeline in `work/`: `grade.py` (LUT `nordic.cube`), `engine.py` (Dekodierung HLG->SDR, Kamera, Typo, Masken, Korn), `scenes.py` (alle Timings in Frames, 30 fps, 1 Schlag = 15 Frames), `render.py`.
+- Rendern: `cd work && python3 render.py 1 2 3 4 5 6 7 8 9 concat` -> `work/out/video_stumm.mp4` (≈4 min, Caches in `work/cache/`, nicht im Repo).
+- Szene 5 einsetzen: Seedance-Clip als `footage/seedance_s5.mp4` ablegen (9:16, ≥5 s), dann `python3 render.py 5 6 concat`.
+- Lesart Storyboard: Spalte „Übergang“ = Übergang IN die Szene. Folge: S1 hart aus Schwarz, S2 Match Cut aufwärts, S3 Korbrand-Maske, S4 Whips, S5 hart in die Stille, S6 hart auf Drop, S7 grüne Wischblende, S8 Zoom-Schnitt, S9 Licht-Match-Cut auf Logo. S5/S6 sind zwei harte Schnitte hintereinander (so freigegeben; Unterschied liegt im Ton).
+- Netz: higgsfield.ai, api., platform. erreichbar; `docs.higgsfield.ai` gesperrt (für API-Doku freigeben).
+
 ## Nächste Schritte
-1. Alle Szenen außer Szene 5 aus echtem Footage bauen (Grading, Typo-Animation, Masken), Stil-Check pro Szene.
 2. Nach Freischaltung: Higgsfield-Kosten für Szene 5 (Seedance 2.5), Sprecher, Musik, SFX abfragen und dem Nutzer nennen.
 3. Ton mischen, Gesamt-Stil-Check, MP4 rendern und liefern.
