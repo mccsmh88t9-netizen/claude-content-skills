@@ -115,7 +115,7 @@ Alle Ideen setzen echte Aufnahmen voraus. Inhaltlich bleiben sie bei dem, was im
 
 | Phase | Ziel | Skill(s) |
 |-------|------|----------|
-| 1. Verstehen | Bewerber-Personas (Berufseinsteiger, Quereinsteiger) | [`audience-personas`](../../skills/audience-personas/SKILL.md), [`social-listening`](../../skills/social-listening/SKILL.md) |
+| 1. Verstehen | Bewerber-Personas → [Hypothesen](phase-1-personas.md), Mitarbeitergespräche offen | [`audience-personas`](../../skills/audience-personas/SKILL.md), [`social-listening`](../../skills/social-listening/SKILL.md) |
 | 2. Positionieren | Arbeitgeberversprechen gegen andere regionale Arbeitgeber abgrenzen | [`competitor-positioning`](../../skills/competitor-positioning/SKILL.md), [`positioning-audit`](../../skills/positioning-audit/SKILL.md) |
 | 3. Profil | Bio und Profil auf Bewerbung trimmen | [`bio-profile-optimizer`](../../skills/bio-profile-optimizer/SKILL.md), [`profile-conversion-audit`](../../skills/profile-conversion-audit/SKILL.md) |
 | 4. Planen | Content-Säulen und 2-Wochen-Plan | [`content-pillar-builder`](../../skills/content-pillar-builder/SKILL.md), [`content-calendar`](../../skills/content-calendar/SKILL.md), [`series-planner`](../../skills/series-planner/SKILL.md) |
@@ -151,3 +151,4 @@ Alle Ideen setzen echte Aufnahmen voraus. Inhaltlich bleiben sie bei dem, was im
 |-------|--------------|-----|
 | 2026-11-03 | Projektsteckbrief angelegt | – |
 | 2026-11-03 | Unternehmensprofil und Kommunikationsregeln vom Auftraggeber übernommen | Auftraggeber |
+| 2026-11-03 | Phase 1: zwei Segmente (Berufseinsteiger, Quereinsteiger) als Hypothesen angelegt | – |
