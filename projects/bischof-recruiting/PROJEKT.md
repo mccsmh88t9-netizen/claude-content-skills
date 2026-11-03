@@ -99,19 +99,7 @@ Menschen, die …
 - **Budget:** _[organisch / Paid-Budget pro Monat]_
 - **Freigabe:** _[wer gibt frei, wie schnell]_
 
-## 7. Kanäle & Formate
-
-| Kanal | Rolle | Formate |
-|-------|-------|---------|
-| _[Instagram]_ | _[Reichweite, Einblicke in den Arbeitsalltag]_ | _[Reels, Stories, Carousels]_ |
-| _[Facebook]_ | _[regionale Reichweite]_ | _[Videos, Beiträge]_ |
-| _[TikTok]_ | _[Berufseinsteiger]_ | _[Kurzvideos]_ |
-| _[Paid Social]_ | _[gezielte Ausspielung im Pendelradius]_ | _[Reels-Ads, Lead-Ads]_ |
-| _[Karriereseite]_ | _[Conversion]_ | _[Kurzbewerbung]_ |
-
-**Bewerbungsweg:** _[offen, z. B. DM-Stichwort oder Kurzformular, dann Rückruf]_
-
-## 8. Content-Ideen (aus dem Briefing abgeleitet)
+## 7. Content-Ideen (aus dem Briefing abgeleitet)
 
 Alle Ideen setzen echte Aufnahmen voraus. Inhaltlich bleiben sie bei dem, was im Briefing steht.
 
@@ -124,7 +112,7 @@ Alle Ideen setzen echte Aufnahmen voraus. Inhaltlich bleiben sie bei dem, was im
 | „Kein Baum ist gleich“: drei Baustellen in einer Woche | Carousel / Reel | Abwechslung |
 | Büro vs. Baumkrone | Split-Screen-Reel | Arbeiten an der frischen Luft |
 
-## 9. Fahrplan mit den Skills aus diesem Repo
+## 8. Fahrplan mit den Skills aus diesem Repo
 
 | Phase | Ziel | Skill(s) |
 |-------|------|----------|
@@ -137,7 +125,7 @@ Alle Ideen setzen echte Aufnahmen voraus. Inhaltlich bleiben sie bei dem, was im
 | 7. Bewerber gewinnen | Kommentare und DMs in Bewerbungen verwandeln | [`comment-responder`](../../skills/comment-responder/SKILL.md), [`dm-script-writer`](../../skills/dm-script-writer/SKILL.md), [`cta-writer`](../../skills/cta-writer/SKILL.md) |
 | 8. Auswerten | Was bringt Bewerbungen, was nicht | [`analytics-readout`](../../skills/analytics-readout/SKILL.md), [`launch-retrospective`](../../skills/launch-retrospective/SKILL.md) |
 
-## 10. KPIs
+## 9. KPIs
 
 | Kennzahl | Zielwert | Ist |
 |----------|----------|-----|
@@ -148,7 +136,7 @@ Alle Ideen setzen echte Aufnahmen voraus. Inhaltlich bleiben sie bei dem, was im
 | Kosten pro passender Bewerbung | _[…]_ | – |
 | Einstellungen | _[…]_ | – |
 
-## 11. Offene Punkte
+## 10. Offene Punkte
 
 - [x] Unternehmensprofil, Zielgruppe, Vorteile, Werbebotschaft
 - [ ] Ansprechpartner, Website, bestehende Social-Profile
@@ -161,7 +149,7 @@ Alle Ideen setzen echte Aufnahmen voraus. Inhaltlich bleiben sie bei dem, was im
 - [ ] Einwilligungen der Mitarbeiter für Aufnahmen
 - [ ] Gibt es Mitarbeiter mit Quereinstieg, die vor der Kamera erzählen würden?
 
-## 12. Entscheidungslog
+## 11. Entscheidungslog
 
 | Datum | Entscheidung | Wer |
 |-------|--------------|-----|
