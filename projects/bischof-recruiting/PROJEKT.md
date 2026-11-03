@@ -44,7 +44,7 @@ Ton: Originalgeräusche aus dem Footage (Säge, Häcksler, Hydraulik) + Musik + 
 
 ## Regeln aus dem Auftrag
 - Vor jeder Higgsfield-Erzeugung Kosten in Credits und Euro nennen, mit dem echten Auftrag abfragen, Guthaben prüfen. Teurer als angesagt → vorher fragen.
-- Preis pro Credit: **noch offen, beim Nutzer erfragen.**
+- Preis pro Credit: **0,05 €** (vom Nutzer bestätigt).
 - Schrift, Zahlen, Logos immer aus Code.
 - Stil-Check nach jeder Szene mit Standbildern; am Ende Gesamtcheck, dann MP4 liefern.
 
@@ -63,7 +63,20 @@ Ton: Originalgeräusche aus dem Footage (Säge, Häcksler, Hydraulik) + Musik + 
 - Rendern: `cd work && python3 render.py 1 2 3 4 5 6 7 8 9 concat` -> `work/out/video_stumm.mp4` (≈4 min, Caches in `work/cache/`, nicht im Repo).
 - Szene 5 einsetzen: Seedance-Clip als `footage/seedance_s5.mp4` ablegen (9:16, ≥5 s), dann `python3 render.py 5 6 concat`.
 - Lesart Storyboard: Spalte „Übergang“ = Übergang IN die Szene. Folge: S1 hart aus Schwarz, S2 Match Cut aufwärts, S3 Korbrand-Maske, S4 Whips, S5 hart in die Stille, S6 hart auf Drop, S7 grüne Wischblende, S8 Zoom-Schnitt, S9 Licht-Match-Cut auf Logo. S5/S6 sind zwei harte Schnitte hintereinander (so freigegeben; Unterschied liegt im Ton).
-- Netz: higgsfield.ai, api., platform. erreichbar; `docs.higgsfield.ai` gesperrt (für API-Doku freigeben).
+- Netz: Nutzer hat am 03.11. `docs.higgsfield.ai`, `upload.higgsfield.ai`, `pixabay.com`, `cdn.pixabay.com` freigegeben (neue Sitzung nötig, erst prüfen).
+
+## Higgsfield-Stand (03.11.2026)
+- Zugriff über den **Higgsfield-MCP-Connector** (`mcp__Higgsfield__*`), nicht über die REST-API. Kosten vorab mit `get_cost: true`.
+- Guthaben: **80 Credits**, Plan **basic**. Seedance 2.5 wurde abgelehnt: „Requires plus plan or higher“ (nichts abgebucht). **Vor dem nächsten Versuch beim Nutzer klären: auf Plus upgegradet? Sonst Alternativmodell mit Kosten vorschlagen.**
+- Abgefragte Kosten (9:16): Seedance 2.5 5 s 1080p = 80 Cr (4,00 €, mit/ohne Ton gleich) · 720p = 35 Cr · Entwurf 480p = 15 Cr (Finalisierung wird voll berechnet) · Sprecher ganzer Text ElevenLabs v4 = 1,84 Cr (0,09 €) · Seed Audio = 2,4 Cr.
+- Freigegeben vom Nutzer: Budget ca. 4,30 € (Szene 5 in 1080p + 2–3 Sprecherproben). 80 Cr reichen nicht für beides, ca. 6 Cr fehlen; Szene 5 hat Vorrang.
+- Referenzbild für Szene 5: `work/seedance/ref_ausruestung.jpg` (Upload: `media_upload` -> curl PUT mit Header `If-None-Match: *` -> `media_confirm`, dann `mode: omni_reference`, Rolle `image_references`; Preis vorher neu mit get_cost prüfen).
+- Prompt Szene 5 (t2v, duration 5, resolution 1080p, aspect_ratio 9:16, generate_audio true):
+  „Vertical 9:16 cinematic close-up, documentary workwear-campaign look. Two arborists in a snowy winter forest clearing with freshly cut logs and sawdust. The experienced mentor wears an orange chainsaw-protective jacket under a dark navy padded vest, black gloves, red helmet with red ear defenders and mesh visor. He stands beside a young newcomer in the same gear and guides the newcomer's gloved hands onto an orange chainsaw: right hand onto the rear handle, left hand wrapping the front grip, then he taps the chain brake with his thumb and gives a short approving nod. Camera stays tight on the hands and the saw, faces partly cropped or out of focus, shallow depth of field. Overcast cold daylight, cool blue shadows, saturated orange, slow steady push-in, slight handheld energy, 35mm film grain, realistic. Ambient sound: quiet winter forest, gloves on plastic handle, a soft click of the chain brake, no music, no speech. No text, no logos.“
+- Ergebnis als `footage/seedance_s5.mp4` ablegen, dann `python3 render.py 5 6 concat`.
+- Sprecher: Stimmenliste (`list_voices`) nennt keine Sprache -> 2–3 männliche Kandidaten (z. B. Knox, Brooks, Marcus) mit ElevenLabs v4 erzeugen und dem Nutzer zur Auswahl schicken.
+- Musik: Higgsfield hat kein freigegebenes Musik-/SFX-Modell (Suno fehlt, Sonilo/Mirelo nur für Spiele). Nutzer will **lizenzfreie Musik** -> Pixabay (Pixabay-Lizenz, kommerziell, ohne Nennung), Action-Trailer, ~120 BPM, Drop bei 0:17, Stille in Szene 5. Lizenz/Quelle im Repo dokumentieren.
+- Geräusche: Originalton aus dem Footage (Säge, Häcksler, Hydraulik).
 
 ## Nächste Schritte
 2. Nach Freischaltung: Higgsfield-Kosten für Szene 5 (Seedance 2.5), Sprecher, Musik, SFX abfragen und dem Nutzer nennen.
