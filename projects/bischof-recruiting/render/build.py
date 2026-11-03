@@ -433,13 +433,10 @@ def transition(f, img):
         pts = np.array([[x - 260, 0], [x + 140, 0], [x, H], [x - 400, H]], np.int32)
         img = img.copy()
         cv2.fillPoly(img, [pts], FLEET)
-        if d < 0:
-            right = np.array([[x + 140, 0], [W + 500, 0], [W + 500, H], [x, H]], np.int32)
-        else:
-            right = None
+        right = np.array([[x + 140, 0], [W + 500, 0], [W + 500, H], [x, H]], np.int32)
         left = np.array([[-500, 0], [x - 260, 0], [x - 400, H], [-500, H]], np.int32)
-        # links vom Balken neues Bild, rechts altes: wird im Hauptloop gemischt
-        return img, (left if d >= 0 else right, d)
+        # links vom Balken neues Bild (S7), rechts altes (S6): wird im Hauptloop gemischt
+        return img, (left if d < 0 else right, d)
     # Zoom-Schnitt: S7 -> S8
     d = f - 750
     if 0 <= d < 6:
@@ -489,7 +486,7 @@ def render(f):
     img2, wipe = transition(f, img)
     if wipe is not None and wipe[0] is not None:
         poly, d = wipe
-        other_f = 629 if d >= 0 else 630
+        other_f = 630 if d < 0 else 629
         other = render_simple(other_f)
         m = np.zeros((H, W), np.uint8)
         cv2.fillPoly(m, [poly], 255)
@@ -544,7 +541,7 @@ if __name__ == "__main__":
         a, b = map(int, args[args.index("--range") + 1].split(":"))
     out = os.path.join(OUT, "video_stumm.mp4" if (a, b) == (0, TOTAL) else f"teil_{a}_{b}.mp4")
     ff = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
-                           "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "slow", "-crf", "20",
+                           "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "slow", "-crf", "23",
                            "-pix_fmt", "yuv420p", "-movflags", "+faststart", out], stdin=subprocess.PIPE)
     for f in range(a, b):
         ff.stdin.write(render(f).tobytes())

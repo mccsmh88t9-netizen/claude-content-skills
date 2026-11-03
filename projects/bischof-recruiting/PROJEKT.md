@@ -57,7 +57,23 @@ Ton: Originalgeräusche aus dem Footage (Säge, Häcksler, Hydraulik) + Musik + 
 - ffmpeg, Playwright/Chromium (HTML-Frames rendern), Python mit PIL/numpy, `pip install rembg onnxruntime` für Freistellung.
 - Google Fonts/jsdelivr sind im Netz gesperrt; Schriften kamen von raw.githubusercontent.com.
 
+## Stand (03.11.2026)
+- Render-Pipeline steht: `render/build.py` (Szenen, Typo, Übergänge) + `render/look.py` (Grading, Korn, Typo-Bausteine).
+  - `python3 render/build.py` → `render/out/video_stumm.mp4` (32 s, 1080×1920, 30 fps, ohne Ton)
+  - `python3 render/build.py --stills` → Stil-Check-Standbilder in `render/out/stills/`
+  - `--range a:b` rendert nur Frames a–b. Personenmasken werden in `render/cache/` gecacht (nicht im Git).
+- Szenen 1–4 und 6–9 aus echtem Footage gebaut, Stil-Check bestanden. Szene 5 (0:12–0:17) ist ein dunkelgrüner Platzhalter mit fertiger Typo.
+- Korrigiert nach Stil-Check: Ortszeile Endkarte („AUS WIEFELSTEDE“), dunkler Verlauf hinter Schrift in Szene 6, Richtung der grünen Wischblende.
+- Abweichung: Higgsfield läuft jetzt über den MCP-Connector statt über den API-Key (Weg 1 entfällt).
+
+## Higgsfield-Kosten Szene 5 (Abfrage 03.11.2026, nichts erzeugt)
+- Guthaben: **80 Credits**, Plan Basic.
+- Seedance 2.5, 5 s, 9:16, 1080p, ohne Ton: **80 Credits** (= gesamtes Guthaben).
+- Seedance 2.5, Entwurf 480p, 5 s: **15 Credits** (kann später auf 1080p finalisiert werden, Finalisierung wird extra berechnet).
+- Sprecher, Musik, SFX noch nicht abgefragt, passen nach einer 1080p-Szene 5 nicht mehr ins Guthaben.
+- Euro-Preis pro Credit weiterhin offen.
+
 ## Nächste Schritte
-1. Alle Szenen außer Szene 5 aus echtem Footage bauen (Grading, Typo-Animation, Masken), Stil-Check pro Szene.
-2. Nach Freischaltung: Higgsfield-Kosten für Szene 5 (Seedance 2.5), Sprecher, Musik, SFX abfragen und dem Nutzer nennen.
-3. Ton mischen, Gesamt-Stil-Check, MP4 rendern und liefern.
+1. Nutzer entscheidet: Szene 5 als Entwurf (15 Credits) oder direkt 1080p (80 Credits), ggf. Credits nachkaufen. Euro-Preis pro Credit erfragen.
+2. Szene 5 erzeugen, in `build.py` als Shot einsetzen (Platzhalter ersetzen), Stil-Check.
+3. Sprecher, Musik (120 BPM), SFX abfragen und erzeugen, Ton mischen, Gesamt-Stil-Check, finales MP4.
