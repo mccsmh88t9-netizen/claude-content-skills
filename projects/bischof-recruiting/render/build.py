@@ -314,7 +314,7 @@ def base_frame(f):
     sh = shot_of(f)
     if sh is None:
         return None, None
-    if sh.still and isinstance(sh.still, str):
+    if isinstance(sh.still, str):
         if sh.still not in _still_cache:
             _still_cache[sh.still] = load_still(sh.still)
         sh.still = _still_cache[sh.still]
@@ -544,7 +544,7 @@ if __name__ == "__main__":
         a, b = map(int, args[args.index("--range") + 1].split(":"))
     out = os.path.join(OUT, "video_stumm.mp4" if (a, b) == (0, TOTAL) else f"teil_{a}_{b}.mp4")
     ff = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
-                           "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "slow", "-crf", "16",
+                           "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "slow", "-crf", "20",
                            "-pix_fmt", "yuv420p", "-movflags", "+faststart", out], stdin=subprocess.PIPE)
     for f in range(a, b):
         ff.stdin.write(render(f).tobytes())
