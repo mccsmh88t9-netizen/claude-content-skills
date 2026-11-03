@@ -96,7 +96,6 @@ Menschen, die …
 - **Bildmaterial:** Authentische Aufnahmen von echten Mitarbeitern, Maschinen und Baustellen. Kein Stock-Material als Hauptmotiv.
 - **No-Gos:** Erfundene Infos über Unternehmen oder Arbeitsbedingungen, unbelegte Benefits, Altersnennung in Anzeigen
 - **Rechtliches:** AGG-konform (m/w/d, keine Altersangaben), DSGVO bei Bewerberdaten, schriftliche Einwilligung der Mitarbeiter, bevor sie in Videos oder auf Fotos auftauchen
-- **Budget:** _[organisch / Paid-Budget pro Monat]_
 - **Freigabe:** _[wer gibt frei, wie schnell]_
 
 ## 7. Content-Ideen (aus dem Briefing abgeleitet)
@@ -130,7 +129,6 @@ Alle Ideen setzen echte Aufnahmen voraus. Inhaltlich bleiben sie bei dem, was im
 | Kennzahl | Zielwert | Ist |
 |----------|----------|-----|
 | Reichweite im Pendelradius | _[…]_ | – |
-| Profilbesuche → Klick auf Bewerbungsweg | _[…]_ | – |
 | Bewerbungen gesamt | _[…]_ | – |
 | Davon passend | _[…]_ | – |
 | Kosten pro passender Bewerbung | _[…]_ | – |
