@@ -57,7 +57,23 @@ Ton: Originalgeräusche aus dem Footage (Säge, Häcksler, Hydraulik) + Musik + 
 - ffmpeg, Playwright/Chromium (HTML-Frames rendern), Python mit PIL/numpy, `pip install rembg onnxruntime` für Freistellung.
 - Google Fonts/jsdelivr sind im Netz gesperrt; Schriften kamen von raw.githubusercontent.com.
 
+## Stand der Umsetzung (Pipeline in `build/`)
+- `build/edl.py` – Schnittliste: Clips, In-Punkte, Speed-Ramps, Push-in, Fokuspunkte, Szenennummern.
+- `build/prep.py <cache>` – extrahiert Quellframes (30 fps, 1080×1920), Personenmasken (rembg u2net) für Szene 2 und 8, Stills freigestellt + Hintergrund aufgefüllt (Parallax).
+- `build/render.py <cache> stills <t…>` / `video <out.mp4> [t0 t1]` – Grading „Nordischer Winter“ (Polynom-Fit aus `stilrahmen/before.jpg` → `after.jpg`, Koeffizienten in `build/grade_coef.npy`), Vignette, obere Abdunklung, Korn, Typo (Einschlag mit 8 % Overshoot / 120 ms Nachfedern / 2 Frames Versatz, Scrim für Lesbarkeit), Masken, alle Übergänge, Brand-Zeile + Szenenzähler, Endkarte.
+- `build/sfx_bed.py <out.wav>` – grober Tonteppich aus Originalgeräuschen (nur Preview).
+- `build/sheet.py` – Kontaktbogen für Stil-Checks (rote Linie = Safe Zone).
+- Cache liegt außerhalb des Repos (Scratchpad); neu erzeugen mit `prep.py`.
+
+Szenen 1–4 und 6–9 sind gebaut, Szene 5 ist ein gekennzeichneter Platzhalter (Schrift final, Bild folgt aus Seedance).
+
+Abweichungen vom Storyboard (bewusst, Regieentscheidung):
+- Szene 4: je **2 Schläge** (1 s) pro Clip statt „1 Takt“ – 4 Clips in 4 s gehen nur so.
+- 0:17 Drop: harter Schnitt mit 3-Frame-Weißblitz, weil 0:12 schon ein harter Schnitt ist (Regel „nie zweimal derselbe Übergang“).
+- Innerhalb Szene 6 (0:19) Zoom-Schnitt, innerhalb Szene 7 (0:23) harter Schnitt.
+- Licht-Match-Cut aufs Logo bei 0:29,6; Endkarte 2,4 s.
+
 ## Nächste Schritte
-1. Alle Szenen außer Szene 5 aus echtem Footage bauen (Grading, Typo-Animation, Masken), Stil-Check pro Szene.
-2. Nach Freischaltung: Higgsfield-Kosten für Szene 5 (Seedance 2.5), Sprecher, Musik, SFX abfragen und dem Nutzer nennen.
-3. Ton mischen, Gesamt-Stil-Check, MP4 rendern und liefern.
+1. ~~Alle Szenen außer Szene 5 aus echtem Footage bauen~~ – erledigt, Preview-MP4 mit Originalton.
+2. Preis pro Credit vom Nutzer, `HIGGSFIELD_API_KEY` + Domains freischalten. Dann Kosten für Szene 5 (Seedance 2.5, 5 s, 9:16), Sprecher, Musik (120 BPM, Drop auf 0:17), SFX mit echtem Auftrag abfragen und nennen.
+3. Seedance-Clip in `edl.py` als Shot `s5` einsetzen, Ton mischen, Gesamt-Stil-Check, finales MP4.
