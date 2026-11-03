@@ -346,14 +346,16 @@ def blit(layer, spr, x, y, scale=1.0, alpha=1.0, dx=0, dy=0):
     layer[...] = layer * (1 - warped[..., 3:4]) + warped
 
 
-def slam(dt):
-    """Einschlag auf den Beat: groß rein, 8 % Overshoot, 120 ms Nachfedern, danach leichter Drift."""
+def slam(dt, width=600):
+    """Einschlag auf den Beat: groß rein, 8 % Overshoot, 120 ms Nachfedern, danach leichter Drift.
+    Startgröße hängt von der Breite ab, damit breite Wörter nicht aus dem Bild ragen."""
     fr = dt * FPS
     if fr < 0:
         return None
+    s0 = 1 + 0.38 * min(1.0, 300 / max(width, 1))
     if fr < 3:
         u = fr / 3
-        s = 1.38 + (0.92 - 1.38) * u * u
+        s = s0 + (0.92 - s0) * u * u
     elif fr < 3 + 3.6:
         s = 0.92 + 0.08 * ease_out((fr - 3) / 3.6)
     else:
@@ -517,7 +519,7 @@ def text_layers(t):
         x = e["x"] if e["x"] is not None else (W - spr[2][0]) / 2
         L = back if e["layer"] == "back" else front
         if e["anim"] == "slam":
-            s, a = slam(dt); blit(L, spr, x, e["y"], s, a)
+            s, a = slam(dt, spr[2][0]); blit(L, spr, x, e["y"], s, a)
         elif e["anim"] == "slide":
             dx, a = slide(dt); blit(L, spr, x, e["y"], 1.0, a, dx=dx)
         elif e["anim"] == "wipe":
