@@ -141,8 +141,6 @@ Alle Ideen setzen echte Aufnahmen voraus. Inhaltlich bleiben sie bei dem, was im
 - [x] Unternehmensprofil, Zielgruppe, Vorteile, Werbebotschaft
 - [ ] Ansprechpartner, Website, bestehende Social-Profile
 - [ ] Anzahl Stellen, Einstellungstermin, Bewerbungsfrist
-- [ ] Bewerbungsweg (Formular, DM, Telefon, E-Mail)
-- [ ] Kanäle und Budget
 - [ ] Pendelradius / Zielregion
 - [ ] Freigabeprozess
 - [ ] Material: vorhandene Fotos und Videos, Drehtermin auf einer Baustelle
