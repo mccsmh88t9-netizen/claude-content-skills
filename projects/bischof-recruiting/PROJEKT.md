@@ -44,7 +44,7 @@ Ton: Originalgeräusche aus dem Footage (Säge, Häcksler, Hydraulik) + Musik + 
 
 ## Regeln aus dem Auftrag
 - Vor jeder Higgsfield-Erzeugung Kosten in Credits und Euro nennen, mit dem echten Auftrag abfragen, Guthaben prüfen. Teurer als angesagt → vorher fragen.
-- Preis pro Credit: **noch offen, beim Nutzer erfragen.**
+- Preis pro Credit: **0,05 €** (vom Nutzer genannt, 03.11.2026).
 - Schrift, Zahlen, Logos immer aus Code.
 - Stil-Check nach jeder Szene mit Standbildern; am Ende Gesamtcheck, dann MP4 liefern.
 
