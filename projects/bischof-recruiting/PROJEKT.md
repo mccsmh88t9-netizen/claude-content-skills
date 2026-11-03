@@ -57,7 +57,7 @@ Menschen, die …
 - etwas Neues lernen möchten
 - keine abgeschlossene Berufsausbildung haben oder sich beruflich verändern möchten
 
-**Schwerpunkt:** Berufseinsteiger und Quereinsteiger aus anderen Branchen, ausdrücklich auch Menschen ohne jede Erfahrung in der Baumpflege.
+**Zielgruppe (festgelegt):** Berufseinsteiger und Quereinsteiger aus anderen Branchen, ausdrücklich auch Menschen ohne jede Erfahrung in der Baumpflege. Es gibt eine Kampagne für beide Gruppen, jeder Beitrag spricht beide an.
 
 | Merkmal | Inhalt |
 |---------|--------|
@@ -151,4 +151,5 @@ Alle Ideen setzen echte Aufnahmen voraus. Inhaltlich bleiben sie bei dem, was im
 |-------|--------------|-----|
 | 2026-11-03 | Projektsteckbrief angelegt | – |
 | 2026-11-03 | Unternehmensprofil und Kommunikationsregeln vom Auftraggeber übernommen | Auftraggeber |
+| 2026-11-03 | Zielgruppe festgelegt: Berufseinsteiger und Quereinsteiger, eine Kampagne für beide | Auftraggeber |
 | 2026-11-03 | Phase 1: zwei Segmente (Berufseinsteiger, Quereinsteiger) als Hypothesen angelegt | – |

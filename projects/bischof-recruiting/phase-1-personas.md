@@ -1,6 +1,6 @@
 # Phase 1: Bewerber-Personas
 
-> **Status:** Hypothesen, noch nicht belegt · **Stand:** 2026-11-03 · **Skill:** [`audience-personas`](../../skills/audience-personas/SKILL.md)
+> **Status:** Zielgruppen festgelegt (Berufseinsteiger + Quereinsteiger) · Auslöser und Einwände noch Hypothesen · **Stand:** 2026-11-03 · **Skill:** [`audience-personas`](../../skills/audience-personas/SKILL.md)
 
 ## 1. Datenlage
 
@@ -20,7 +20,12 @@ Die Tätigkeit, die alle suchen: **ein Job draußen, körperlich, mit Technik un
 
 Gemeinsame Merkmale laut Briefing: arbeitet gern draußen, mag körperliche und handwerkliche Arbeit, interessiert sich für große Maschinen, ist zuverlässig und teamfähig, will etwas Neues lernen.
 
-Aus dem Briefing ergeben sich **zwei Segmente**. Mehr Gruppen lassen sich ohne weitere Daten nicht begründen.
+**Entscheidung des Auftraggebers (2026-11-03):** Die Kampagne richtet sich an **Berufseinsteiger und Quereinsteiger**. Weitere Zielgruppen gibt es nicht.
+
+**Was daraus für die Umsetzung folgt:**
+- **Eine Kampagne für beide Gruppen** mit derselben Kernbotschaft: „KEINE AUSBILDUNG? KEIN PROBLEM!“ und „Du musst noch kein Baumpfleger sein. Wir zeigen dir, wie es geht!“
+- **Jeder Beitrag spricht beide Gruppen an.** Dafür sorgt der Satz „Egal, ob du gerade erst anfängst oder dich beruflich verändern willst“ (oder eine Variante davon) in Caption, Text im Bild oder Anzeige.
+- **Einzelne Beiträge dürfen eine Gruppe in den Vordergrund stellen** (siehe Content-Ansätze unten), schließen die andere aber nie aus.
 
 ---
 
