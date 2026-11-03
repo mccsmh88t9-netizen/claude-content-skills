@@ -3,3 +3,5 @@ node_modules/
 *.log
 .env
 .env.local
+projects/*/render/cache/
+__pycache__/
