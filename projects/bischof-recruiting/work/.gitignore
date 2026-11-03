@@ -1,0 +1,7 @@
+cache/
+out/
+src/
+render.log
+__pycache__/
+check/*.png
+check/drum_test.jpg
