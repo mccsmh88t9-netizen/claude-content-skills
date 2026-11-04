@@ -5,3 +5,4 @@ node_modules/
 .env.local
 projects/*/render/cache/
 __pycache__/
+projects/*/render/out/ton_mix.wav
