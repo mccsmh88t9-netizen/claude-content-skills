@@ -364,7 +364,7 @@ def typo(f, layer):
             slam_words(layer, [("JEDES", None, 0), ("WETTER.", FLEET, 1)], 60, 360, 330, f, 200)
     elif s == 5:
         slam_words(layer, [("DU BRAUCHST", None, 0), ("KEINE", FLEET, 1), ("VORKENNTNISSE.", None, 2)],
-                   60, 420, 375, f, 150, stagger=4)
+                   60, 1090 if HAS5 else 420, 375, f, 150, stagger=4)
     elif s == 6:
         slam_words(back, [("WIR ZEIGEN", None, 0), ("DIR, WIE'S", None, 1), ("GEHT.", FLEET, 2)],
                    60, 300, 510, f, 175, stagger=3)
@@ -471,9 +471,12 @@ def render(f):
     else:
         img, sh = base_frame(f)
         layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    if s in (5, 6):
+    if s == 6:
         yy = np.linspace(0, 1, H, dtype=np.float32)[:, None, None]
         img = (img * (1 - 0.5 * np.clip(1 - yy / 0.42, 0, 1) ** 1.2)).astype(np.uint8)
+    elif s == 5 and HAS5:  # Schrift unten über dem Stamm, Hände bleiben frei
+        yy = np.linspace(0, 1, H, dtype=np.float32)[:, None, None]
+        img = (img * (1 - 0.55 * np.clip((yy - 0.5) / 0.3, 0, 1) ** 1.2)).astype(np.uint8)
     front, back = typo(f, layer)
     mask = None
     if sh is not None and sh.mask and back.getbbox():
