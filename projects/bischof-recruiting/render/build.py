@@ -225,10 +225,10 @@ def cta(layer, x, y, t, size=70):
 # ---------------------------------------------------------------- Shots
 class Shot:
     def __init__(self, a, b, src=None, start=0.0, speed=1.0, still=None, z=(1.0, 1.05), drift=(0, 0), mask=False,
-                 off=(0, 0), over=1.08, dehaze=0.0):
+                 off=(0, 0), over=1.08, dehaze=0.0, lv=None):
         self.a, self.b, self.src, self.start, self.speed = a, b, src, start, speed
         self.still, self.z, self.drift, self.mask = still, z, drift, mask
-        self.off, self.over, self.dehaze = off, over, dehaze
+        self.off, self.over, self.dehaze, self.lv = off, over, dehaze, lv
 
     def src_dur(self):
         n = self.b - self.a
@@ -253,6 +253,8 @@ class Shot:
         out = push(img, ease_inout(u), self.z[0], self.z[1], dx, dy)
         if self.dehaze:
             out = dehaze(out, self.dehaze)
+        if self.lv:
+            out = levels(out, *self.lv)
         return grade(out)
 
 
@@ -262,6 +264,12 @@ def dehaze(img, k):
     lo, hi = np.percentile(f, 1), np.percentile(f, 99.5)
     g = np.clip((f - lo) / max(1, hi - lo), 0, 1) ** 1.15 * 255
     return np.clip(f * (1 - k) + g * k, 0, 255).astype(np.uint8)
+
+
+def levels(img, bp, gamma, wp=255):
+    """Belichtung je Shot: Schwarzpunkt bp, Mitten-Gamma (>1 = dichter), Weißpunkt wp."""
+    lut = np.clip((np.arange(256) - bp) / (wp - bp), 0, 1) ** gamma * 255
+    return lut.astype(np.uint8)[img]
 
 
 def ease_inout(u):
@@ -293,16 +301,16 @@ def ramp_fall(k):
 SHOTS = {
     1: [Shot(15, 60, "DJI_20260106_111921_962", 0.2, ramp_saw, z=(1.06, 1.12))],
     2: [Shot(60, 150, "IMG_0209", 11.4, 1.0, z=(1.0, 1.05), drift=(0, -60), mask=True)],
-    3: [Shot(150, 240, "IMG_0469", 2.0, 1.0, z=(1.0, 1.05), drift=(0, 40))],
-    4: [Shot(240, 270, "IMG_0472", 1.6, ramp_greifer, z=(1.02, 1.07)),
-        Shot(270, 300, "DJI_20260131_090238_114", 0.6, 1.0, z=(1.04, 1.09)),
-        Shot(300, 330, "IMG_0477", 3.8, 1.0, z=(1.02, 1.07)),
-        Shot(330, 360, "DJI_20260131_091040_966", 0.4, 1.0, z=(1.0, 1.05))],
+    3: [Shot(150, 240, "IMG_0469", 2.0, 1.0, z=(1.0, 1.05), drift=(0, 40), lv=(30, 1.22, 250))],
+    4: [Shot(240, 270, "IMG_0472", 1.6, ramp_greifer, z=(1.02, 1.07), lv=(16, 1.2, 250)),
+        Shot(270, 300, "DJI_20260131_090238_114", 0.6, 1.0, z=(1.04, 1.09), lv=(16, 1.2, 250)),
+        Shot(300, 330, "IMG_0477", 3.8, 1.0, z=(1.02, 1.07), lv=(16, 1.2, 250)),
+        Shot(330, 360, "DJI_20260131_091040_966", 0.4, 1.0, z=(1.0, 1.05), lv=(14, 1.15, 250))],
     6: [Shot(510, 570, "IMG_0474", 2.6, 1.0, z=(1.02, 1.07), mask=True),
         Shot(570, 630, "DJI_20260106_111921_962", 4.4, ramp_fall, z=(1.03, 1.08))],
     7: [Shot(630, 690, still="man_lkw.jpg", z=(1.0, 1.06), drift=(70, 0)),
         Shot(690, 750, "IMG_0468", 1.6, 1.0, z=(1.02, 1.07), drift=(-40, 0))],
-    5: [Shot(360, 510, SZENE5, 1.4, 1.0, z=(1.0, 1.06))],
+    5: [Shot(360, 510, SZENE5, 1.4, 1.0, z=(1.0, 1.06), lv=(12, 1.24, 255))],
     8: [Shot(750, 810, "IMG_0209", 14.4, 1.0, z=(1.0, 1.05), drift=(0, -50), mask=True)],
     9: [Shot(810, 960, "IMG_3569", 0.6, 1.0, z=(1.45, 1.55), off=(0, -110), over=1.6, dehaze=0.85)],
 }
