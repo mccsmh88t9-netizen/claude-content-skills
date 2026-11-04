@@ -47,12 +47,12 @@ LUT_R, LUT_G, LUT_B = _build_luts()
 def _build_luts_kino():
     """Kinolook: tiefe Schwärzen, kräftige S-Kurve, weiche Schulter, Teal-Schatten, warme Lichter."""
     x = np.linspace(0, 1, 256)
-    s = 1 / (1 + np.exp(-9.5 * (x - 0.46)))
+    s = 1 / (1 + np.exp(-7.0 * (x - 0.46)))
     s = (s - s[0]) / (s[-1] - s[0])
-    tone = 0.22 * x + 0.78 * s
-    tone = tone ** 1.06  # Mitten etwas dichter
-    tone = np.where(tone > 0.68, 0.68 + (tone - 0.68) * 0.55, tone)  # Schulter: Himmel bleibt gezeichnet
-    tone = tone * 0.985 + 0.008  # Schwarz kaum angehoben
+    tone = 0.38 * x + 0.62 * s
+    tone = tone ** 1.04  # Mitten etwas dichter
+    tone = np.where(tone > 0.7, 0.7 + (tone - 0.7) * 0.62, tone)  # Schulter: Himmel bleibt gezeichnet
+    tone = tone * 0.975 + 0.015  # Schwarz minimal angehoben, keine zugelaufenen Schatten
     shadow = np.clip(1 - x / 0.55, 0, 1) ** 1.3
     warm = np.clip(1 - np.abs(x - 0.6) / 0.25, 0, 1)  # Wärme in den oberen Mitten (Haut, Holz, Schnittschutz)
     top = np.clip((x - 0.82) / 0.18, 0, 1)  # Spitzlichter/Himmel neutral-kühl
@@ -72,13 +72,24 @@ def grade(rgb):
     return grade_winter(rgb)
 
 
+def denoise(rgb):
+    """Leichtes Entrauschen: Farbrauschen kräftig, Helligkeitsrauschen kantenschonend."""
+    ycc = cv2.cvtColor(rgb, cv2.COLOR_RGB2YCrCb)
+    y = cv2.bilateralFilter(ycc[..., 0], 7, 14, 5)
+    cr = cv2.GaussianBlur(ycc[..., 1], (0, 0), 2.2)
+    cb = cv2.GaussianBlur(ycc[..., 2], (0, 0), 2.2)
+    return cv2.cvtColor(np.dstack([y, cr, cb]), cv2.COLOR_YCrCb2RGB)
+
+
 def grade_kino(rgb):
+    rgb = denoise(rgb)
     f0 = rgb.astype(np.float32)
-    # Klarheit: lokaler Kontrast in den Mitten (gegen den flauen Wintertag)
+    # Klarheit: nur großflächiger lokaler Kontrast, verstärkt kein feines Rauschen
     lum0 = f0 @ np.array([0.299, 0.587, 0.114], np.float32)
-    blur = cv2.GaussianBlur(lum0, (0, 0), 28)
+    base = cv2.GaussianBlur(lum0, (0, 0), 3)
+    blur = cv2.GaussianBlur(lum0, (0, 0), 40)
     mid = 1 - np.abs(lum0 / 127.5 - 1)
-    f0 += (0.38 * (lum0 - blur) * mid)[..., None]
+    f0 += (0.2 * (base - blur) * mid)[..., None]
     src = np.clip(f0, 0, 255).astype(np.uint8)
     out = np.empty_like(src)
     out[..., 0] = KINO_R[src[..., 0]]

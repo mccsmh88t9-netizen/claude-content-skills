@@ -522,7 +522,7 @@ def render(f):
         u = 1 - d / 6
         img = cv2.addWeighted(img, 1 - u * 0.9, np.full_like(img, 250), u * 0.9, 0)
 
-    grain = 4.5 if (s == 5 and not HAS5) or (s == 9 and f >= FLASH) else 7.0
+    grain = 2.0 if (s == 9 and f >= FLASH) else 2.8  # feines Korn, kein Rauschen
     return texture(img, f, grain, vignette=not (s == 9 and f >= FLASH))
 
 
