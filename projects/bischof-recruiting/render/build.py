@@ -22,7 +22,7 @@ FOOT = lambda n: (os.path.join(ROOT, "ki", n) if n.endswith(".mp4") else
                   os.path.join(ROOT, "footage", n + (".mov" if n.startswith("IMG") else "_video.mov")))
 SZENE5 = "DJI_20260106_111743_142"  # Aufasten am Stamm (echtes Footage, ersetzt KI-Shot)
 HAS5 = True
-TOTAL = 32 * FPS  # 960
+TOTAL = 38 * FPS  # 1140 (Benefit-Szene um 3 Takte verlängert)
 
 # ---------------------------------------------------------------- Quellen
 _src_cache = {}
@@ -308,15 +308,16 @@ SHOTS = {
         Shot(330, 360, "DJI_20260131_091040_966", 0.4, 1.0, z=(1.0, 1.05), lv=(14, 1.15, 250))],
     6: [Shot(510, 570, "IMG_0474", 2.6, 1.0, z=(1.02, 1.07), mask=True),
         Shot(570, 630, "DJI_20260106_111921_962", 4.4, ramp_fall, z=(1.03, 1.08))],
-    7: [Shot(630, 690, still="man_lkw.jpg", z=(1.0, 1.06), drift=(70, 0)),
-        Shot(690, 750, "IMG_0468", 1.6, 1.0, z=(1.02, 1.07), drift=(-40, 0))],
+    7: [Shot(630, 730, still="man_lkw.jpg", z=(1.0, 1.07), drift=(80, 0)),
+        Shot(730, 830, "IMG_0468", 0.6, 1.0, z=(1.02, 1.08), drift=(-40, 0)),
+        Shot(830, 930, "IMG_52F7A0A2", 1.3, 1.0, z=(1.32, 1.38), off=(150, 60))],  # Kronenabwurf, Stamm rechts
     5: [Shot(360, 510, SZENE5, 1.4, 1.0, z=(1.0, 1.06), lv=(12, 1.24, 255))],
-    8: [Shot(750, 810, "IMG_0209", 14.4, 1.0, z=(1.0, 1.05), drift=(0, -50), mask=True)],
-    9: [Shot(810, 960, "IMG_3569", 0.6, 1.0, z=(1.45, 1.55), off=(0, -110), over=1.6, dehaze=0.85)],
+    8: [Shot(930, 990, "IMG_3412", 1.0, 1.0, z=(1.0, 1.05), drift=(0, -40), mask=True)],
+    9: [Shot(990, 1140, "IMG_3569", 0.6, 1.0, z=(1.45, 1.55), off=(0, -110), over=1.6, dehaze=0.85)],
 }
 SCENE_RANGE = {1: (0, 60), 2: (60, 150), 3: (150, 240), 4: (240, 360), 5: (360, 510),
-               6: (510, 630), 7: (630, 750), 8: (750, 810), 9: (810, 960)}
-FLASH = 878  # Licht-Match-Cut auf Logo
+               6: (510, 630), 7: (630, 930), 8: (930, 990), 9: (990, 1140)}
+FLASH = 1058  # Licht-Match-Cut auf Logo
 
 
 def scene_of(f):
@@ -394,10 +395,13 @@ def typo(f, layer):
         chip(layer, "MODERNER MASCHINENPARK", 60, 420, f - 632)
         chip(layer, "FAIRE VERGÜTUNG", 60, 530, f - 673)
         chip(layer, "VIELFÄLTIGE EINSÄTZE", 60, 640, f - 705)
+        chip(layer, "DIENSTRAD-LEASING", 60, 750, f - 762)
+        chip(layer, "URLAUBS- & WEIHNACHTSGELD", 60, 860, f - 807)
+        chip(layer, "VERMÖGENSWIRKSAME LEISTUNGEN", 60, 970, f - 867)
     elif s == 8:
-        slam_words(back, [("QUEREINSTEIGER?", None, 0)], 56, 330, 752, f, 160)
-        slam_words(back, [("PROFI?", None, 0)], 56, 480, 767, f, 160)
-        slam_words(layer, [("BEIDE.", FLEET, 0)], 56, 640, 782, f, 260)
+        slam_words(back, [("QUEREINSTEIGER?", None, 0)], 56, 330, 932, f, 160)
+        slam_words(back, [("PROFI?", None, 0)], 56, 480, 947, f, 160)
+        slam_words(layer, [("BEIDE.", FLEET, 0)], 56, 640, 962, f, 260)
     elif s == 9 and f >= FLASH:
         k = f - FLASH
         # Logo-Endkarte
@@ -463,7 +467,7 @@ def transition(f, img):
         # links vom Balken neues Bild (S7), rechts altes (S6): wird im Hauptloop gemischt
         return img, (left if d < 0 else right, d)
     # Zoom-Schnitt: S7 -> S8
-    d = f - 750
+    d = f - 930
     if 0 <= d < 6:
         z = 1.25 - 0.25 * ease_out(d / 6)
         M = cv2.getRotationMatrix2D((W / 2, H / 2), 0, z)
@@ -483,7 +487,7 @@ def render(f):
         sh = None
     elif s == 9 and f >= FLASH:
         # Endkarte auf Logo-Grün, Lkw tief abgedunkelt dahinter
-        bg, _ = base_frame(min(f, 959))
+        bg, _ = base_frame(min(f, TOTAL - 1))
         bg = cv2.GaussianBlur(bg, (0, 0), 18)
         g = np.array(DEEP, np.float32)
         img = (bg.astype(np.float32) * 0.18 + g * 0.82).astype(np.uint8)
@@ -546,7 +550,7 @@ def render_simple(f):
 
 # ---------------------------------------------------------------- Main
 STYLE_FRAMES = {1: [30], 2: [80, 130], 3: [200], 4: [255, 285, 315, 345], 5: [420], 6: [530, 600],
-                7: [660, 735], 8: [800], 9: [860, 940]}
+                7: [700, 800, 900], 8: [980], 9: [1040, 1120]}
 
 if __name__ == "__main__":
     args = sys.argv[1:]

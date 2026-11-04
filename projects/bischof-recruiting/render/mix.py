@@ -10,10 +10,11 @@ ROOT = build.ROOT
 TON = os.path.join(ROOT, "ton")
 OUT = build.OUT
 VOICE = os.path.join(TON, "sprecher_knox.mp3")
-VOICE_EINSTIEG = os.path.join(TON, "sprecher_knox_einstieg.mp3")  # neuer Einstieg (ersetzt „Keine Ausbildung? Egal.“)
+VOICE_EINSTIEG = os.path.join(TON, "sprecher_knox_einstieg.mp3")
+VOICE_BENEFITS = os.path.join(TON, "sprecher_knox_benefits.mp3")  # neuer Einstieg (ersetzt „Keine Ausbildung? Egal.“)
 MUSIC = os.path.join(TON, "musik_v2.mp3")
 MUSIC_OFFSET = 0.064  # erster Beat der Musik liegt 64 ms nach 0 -> auf Raster ziehen
-DUR = 32.0
+DUR = 38.0
 
 # (Quelle von, bis, Ziel im Video, Tempo) – Sätze aus dem Knox-Take, auf die Schrift-Einschläge gelegt
 LINES = [
@@ -29,10 +30,13 @@ LINES = [
     (13.77, 15.10, 21.05, 1.0),  # Moderner Maschinenpark.
     (15.30, 16.29, 22.42, 1.0),  # Faire Vergütung.
     (16.76, 18.71, 23.45, 1.12),  # Jeden Tag ein anderer Einsatz.
-    (19.04, 20.91, 25.22, 1.0),  # Ob Quereinsteiger oder Profi:
-    (21.13, 22.34, 27.12, 1.0),  # Wir wollen dich.
-    (22.91, 24.84, 28.35, 1.0),  # Bischof Baumpflege aus Wiefelstede.
-    (25.19, 26.09, 30.35, 1.0),  # Jetzt bewerben.
+    (0.00, 1.26, 25.40, 1.0, "benefits"),  # Dienstrad-Leasing.
+    (1.64, 3.32, 26.90, 1.0, "benefits"),  # Urlaubs- und Weihnachtsgeld.
+    (3.64, 5.53, 28.90, 1.0, "benefits"),  # Vermögenswirksame Leistungen.
+    (19.04, 20.91, 31.22, 1.0),  # Ob Quereinsteiger oder Profi:
+    (21.13, 22.34, 33.12, 1.0),  # Wir wollen dich.
+    (22.91, 24.84, 34.35, 1.0),  # Bischof Baumpflege aus Wiefelstede.
+    (25.19, 26.09, 36.35, 1.0),  # Jetzt bewerben.
 ]
 
 
@@ -62,10 +66,11 @@ def main():
     # Sprecher
     vi = add(VOICE)
     ei = add(VOICE_EINSTIEG)
+    bi = add(VOICE_BENEFITS)
     vlabels = []
     for i, (s, e, d, tempo, *src) in enumerate(LINES):
         t = f",atempo={tempo}" if tempo != 1.0 else ""
-        inp = ei if src else vi
+        inp = {"einstieg": ei, "benefits": bi}[src[0]] if src else vi
         fc.append(f"[{inp}:a]atrim={s}:{e},asetpts=PTS-STARTPTS{t},afade=t=in:d=0.02,"
                   f"afade=t=out:st={(e - s) / tempo - 0.04:.3f}:d=0.04,adelay={int(d * 1000)}:all=1[v{i}]")
         vlabels.append(f"[v{i}]")
@@ -77,8 +82,11 @@ def main():
     mi = add(MUSIC)
     fc.append(f"[{mi}:a]atrim={MUSIC_OFFSET}:{MUSIC_OFFSET + 12},asetpts=PTS-STARTPTS,"
               f"afade=t=out:st=11.96:d=0.04[m1]")
-    fc.append(f"[{mi}:a]atrim={MUSIC_OFFSET + 17}:{MUSIC_OFFSET + DUR},asetpts=PTS-STARTPTS,"
-              f"afade=t=in:d=0.005,afade=t=out:st={DUR - 17 - 0.6}:d=0.6,adelay=17000:all=1[m2]")
+    fc.append(f"[{mi}:a]atrim={MUSIC_OFFSET + 17}:{MUSIC_OFFSET + 25.02},asetpts=PTS-STARTPTS,"
+              f"afade=t=in:d=0.005,afade=t=out:st=7.99:d=0.03,adelay=17000:all=1[m2a]")
+    fc.append(f"[{mi}:a]atrim={MUSIC_OFFSET + 19}:{MUSIC_OFFSET + 32},asetpts=PTS-STARTPTS,"
+              f"afade=t=in:d=0.02,afade=t=out:st={13 - 0.6}:d=0.6,adelay=25000:all=1[m2b]")
+    fc.append("[m2a][m2b]amix=inputs=2:normalize=0[m2]")
     # leiser, dumpfer Teppich in der Stille (kein digitales Loch)
     fc.append(f"[{mi}:a]atrim={MUSIC_OFFSET + 12}:{MUSIC_OFFSET + 17},asetpts=PTS-STARTPTS,"
               f"lowpass=f=320,volume=0.07,afade=t=in:d=0.6,afade=t=out:st=4.7:d=0.3,adelay=12000:all=1[mpad]")
