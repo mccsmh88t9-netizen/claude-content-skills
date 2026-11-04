@@ -98,10 +98,10 @@ Ton: Originalgeräusche aus dem Footage (Säge, Häcksler, Hydraulik) + Musik + 
 - „ECHTE NATUR.“ mit `IMG_0452` (Bäume im Nebel).
 - Benefits um Dienstrad-Leasing, Urlaubs- und Weihnachtsgeld, vermögenswirksame Leistungen erweitert (`ton/sprecher_knox_benefits_v2.mp3`, fließend neu eingesprochen „Urlaubsgeld und Weihnachtsgeld“, insgesamt 0,92 Credits). Benefit-Szene 21–31 s mit drittem Shot `IMG_52F7A0A2` (Kronenabwurf).
 - Szene 8 mit neuem Kletterer `IMG_3412`.
-- Video jetzt **38 s**. Musik-Drop um 3 Takte verlängert (Quelle 17–25 s, dann 19–32 s).
+- Video jetzt **36 s**: Benefit-Szene +3 Takte, Szene 5 −1 Takt (Pause nach „Vorkenntnisse“ gekürzt). Stille 12–15 s, Drop bei 15 s, Musik danach Quelle 17–25 s, dann 19–32 s.
 
 ## Ergebnis
-- **`render/out/bischof_recruiting_final.mp4`**: 38 s, 1080×1920, 30 fps, H.264 + AAC, 42 MB, −14,0 LUFS, Kinolook mit leichtem Entrauschen und sanfter Kurve (`LOOK=winter` für den alten Look). `video_stumm.mp4` ist Zwischenprodukt und nicht mehr im Git.
+- **`render/out/bischof_recruiting_final.mp4`**: 36 s, 1080×1920, 30 fps, H.264 + AAC, −14,0 LUFS, Kinolook mit leichtem Entrauschen und sanfter Kurve (`LOOK=winter` für den alten Look). `video_stumm.mp4` ist Zwischenprodukt und nicht mehr im Git.
 - Neu bauen: `python3 render/build.py` (Bild), dann `python3 render/mix.py` (Ton + finales MP4).
 
 ## Offen
