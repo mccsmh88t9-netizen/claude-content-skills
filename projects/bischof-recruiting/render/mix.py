@@ -11,7 +11,7 @@ TON = os.path.join(ROOT, "ton")
 OUT = build.OUT
 VOICE = os.path.join(TON, "sprecher_knox.mp3")
 VOICE_EINSTIEG = os.path.join(TON, "sprecher_knox_einstieg.mp3")
-VOICE_BENEFITS = os.path.join(TON, "sprecher_knox_benefits.mp3")  # neuer Einstieg (ersetzt „Keine Ausbildung? Egal.“)
+VOICE_BENEFITS = os.path.join(TON, "sprecher_knox_benefits_v2.mp3")  # neuer Einstieg (ersetzt „Keine Ausbildung? Egal.“)
 MUSIC = os.path.join(TON, "musik_v2.mp3")
 MUSIC_OFFSET = 0.064  # erster Beat der Musik liegt 64 ms nach 0 -> auf Raster ziehen
 DUR = 38.0
@@ -23,16 +23,14 @@ LINES = [
     (2.58, 4.00, 5.00, 1.0),   # Bei uns zählt nur eins:
     (4.18, 5.66, 6.51, 1.0),   # dass du anpacken willst.  ("anpacken" auf 7,0 s)
     (6.02, 7.08, 8.00, 1.0),   # Große Maschinen.
-    (7.35, 8.40, 10.00, 1.0),  # Echte Natur.
-    (8.60, 9.61, 11.00, 1.0),  # Bei jedem Wetter.
-    (9.91, 11.63, 12.50, 1.0),  # Du brauchst keine Vorkenntnisse.
+    (7.35, 8.40, 9.25, 1.0),   # Echte Natur.
+    (8.60, 9.61, 10.50, 1.0),  # Bei jedem Wetter.
+    (9.91, 11.63, 12.15, 1.0),  # Du brauchst keine Vorkenntnisse.
     (11.88, 13.26, 17.00, 1.0),  # Wir zeigen dir, wie's geht.
     (13.77, 15.10, 21.05, 1.0),  # Moderner Maschinenpark.
     (15.30, 16.29, 22.42, 1.0),  # Faire Vergütung.
     (16.76, 18.71, 23.45, 1.12),  # Jeden Tag ein anderer Einsatz.
-    (0.00, 1.26, 25.40, 1.0, "benefits"),  # Dienstrad-Leasing.
-    (1.64, 3.32, 26.90, 1.0, "benefits"),  # Urlaubs- und Weihnachtsgeld.
-    (3.64, 5.53, 28.90, 1.0, "benefits"),  # Vermögenswirksame Leistungen.
+    (0.00, 5.70, 25.35, 1.05, "benefits"),  # Dienstrad-Leasing, Urlaubsgeld und Weihnachtsgeld, vermögenswirksame Leistungen.
     (19.04, 20.91, 31.22, 1.0),  # Ob Quereinsteiger oder Profi:
     (21.13, 22.34, 33.12, 1.0),  # Wir wollen dich.
     (22.91, 24.84, 34.35, 1.0),  # Bischof Baumpflege aus Wiefelstede.

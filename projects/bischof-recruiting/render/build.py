@@ -302,10 +302,10 @@ SHOTS = {
     1: [Shot(15, 60, "DJI_20260106_111921_962", 0.2, ramp_saw, z=(1.06, 1.12))],
     2: [Shot(60, 150, "IMG_0209", 11.4, 1.0, z=(1.0, 1.05), drift=(0, -60), mask=True)],
     3: [Shot(150, 240, "IMG_0469", 2.0, 1.0, z=(1.0, 1.05), drift=(0, 40), lv=(30, 1.22, 250))],
-    4: [Shot(240, 270, "IMG_0472", 1.6, ramp_greifer, z=(1.02, 1.07), lv=(16, 1.2, 250)),
-        Shot(270, 300, "DJI_20260131_090238_114", 0.6, 1.0, z=(1.04, 1.09), lv=(16, 1.2, 250)),
-        Shot(300, 330, "IMG_0452", 1.3, 1.0, z=(1.02, 1.07), lv=(8, 1.45, 255), dehaze=0.5),
-        Shot(330, 360, "DJI_20260131_091040_966", 0.4, 1.0, z=(1.0, 1.05), lv=(14, 1.15, 250))],
+    4: [Shot(240, 255, "IMG_0472", 1.6, ramp_greifer, z=(1.02, 1.07), lv=(16, 1.2, 250)),
+        Shot(255, 277, "DJI_20260131_090238_114", 0.6, 1.0, z=(1.04, 1.09), lv=(16, 1.2, 250)),
+        Shot(277, 315, "IMG_0452", 1.3, 1.0, z=(1.02, 1.07), lv=(8, 1.45, 255), dehaze=0.5),
+        Shot(315, 360, "DJI_20260131_091040_966", 0.4, 1.0, z=(1.0, 1.05), lv=(14, 1.15, 250))],
     6: [Shot(510, 570, "IMG_0474", 2.6, 1.0, z=(1.02, 1.07), mask=True),
         Shot(570, 630, "DJI_20260106_111921_962", 4.4, ramp_fall, z=(1.03, 1.08))],
     7: [Shot(630, 730, still="man_lkw.jpg", z=(1.0, 1.07), drift=(80, 0)),
@@ -378,15 +378,15 @@ def typo(f, layer):
         slam_words(layer, [("ANPACKEN.", None)], 56, 400, 210, f, 230)
         green_bar(layer, 64, 700, 300, 22, f - 214)
     elif s == 4:
-        if f < 300:
+        if f < 277:
             slam_words(layer, [("GROSSE", None, 0), ("MASCHINEN.", FLEET, 1)], 60, 360, 240, f, 200)
-        elif f < 330:
-            slam_words(layer, [("ECHTE", None, 0), ("NATUR.", FLEET, 1)], 60, 360, 300, f, 200)
+        elif f < 315:
+            slam_words(layer, [("ECHTE", None, 0), ("NATUR.", FLEET, 1)], 60, 360, 277, f, 200)
         else:
-            slam_words(layer, [("JEDES", None, 0), ("WETTER.", FLEET, 1)], 60, 360, 330, f, 200)
+            slam_words(layer, [("JEDES", None, 0), ("WETTER.", FLEET, 1)], 60, 360, 315, f, 200)
     elif s == 5:
         slam_words(layer, [("DU BRAUCHST", None, 0), ("KEINE", FLEET, 1), ("VORKENNTNISSE.", None, 2)],
-                   60, 1090 if HAS5 else 420, 375, f, 150, stagger=4)
+                   60, 1090 if HAS5 else 420, 364, f, 150, stagger=4)
     elif s == 6:
         slam_words(back, [("WIR ZEIGEN", None, 0), ("DIR, WIE'S", None, 1), ("GEHT.", FLEET, 2)],
                    60, 300, 510, f, 175, stagger=3)
@@ -395,9 +395,9 @@ def typo(f, layer):
         chip(layer, "MODERNER MASCHINENPARK", 60, 420, f - 632)
         chip(layer, "FAIRE VERGÜTUNG", 60, 530, f - 673)
         chip(layer, "VIELFÄLTIGE EINSÄTZE", 60, 640, f - 705)
-        chip(layer, "DIENSTRAD-LEASING", 60, 750, f - 762)
-        chip(layer, "URLAUBS- & WEIHNACHTSGELD", 60, 860, f - 807)
-        chip(layer, "VERMÖGENSWIRKSAME LEISTUNGEN", 60, 970, f - 867)
+        chip(layer, "DIENSTRAD-LEASING", 60, 750, f - 760)
+        chip(layer, "URLAUBS- & WEIHNACHTSGELD", 60, 860, f - 805)
+        chip(layer, "VERMÖGENSWIRKSAME LEISTUNGEN", 60, 970, f - 874)
     elif s == 8:
         slam_words(back, [("QUEREINSTEIGER?", None, 0)], 56, 330, 932, f, 160)
         slam_words(back, [("PROFI?", None, 0)], 56, 480, 947, f, 160)
@@ -433,11 +433,11 @@ def typo(f, layer):
 # ---------------------------------------------------------------- Übergänge
 def transition(f, img):
     # Whip Pans in Szene 4 (um Schnitte 270, 300, 330 und 360-Eingang nicht)
-    for c in (270, 300, 330):
+    for c in (255, 277, 315):
         d = f - c
         if -3 <= d <= 2:
             strength = (1 - abs(d + 0.5) / 3.5)
-            dx = (1 if c != 300 else -1) * int(260 * strength)
+            dx = (1 if c != 277 else -1) * int(260 * strength)
             img = np.roll(img, dx, axis=1)
             img = motion_blur(img, 120 * strength)
     # Maske über Korbrand: S3 -> S4 (Fläche steigt von unten, 8 Frames)
