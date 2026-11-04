@@ -20,8 +20,8 @@ os.makedirs(OUT, exist_ok=True)
 os.makedirs(CACHE, exist_ok=True)
 FOOT = lambda n: (os.path.join(ROOT, "ki", n) if n.endswith(".mp4") else
                   os.path.join(ROOT, "footage", n + (".mov" if n.startswith("IMG") else "_video.mov")))
-SZENE5 = "szene5_anlernen.mp4"  # KI-Shot (Higgsfield), liegt in ki/
-HAS5 = os.path.exists(os.path.join(ROOT, "ki", SZENE5))
+SZENE5 = "DJI_20260106_111743_142"  # Aufasten am Stamm (echtes Footage, ersetzt KI-Shot)
+HAS5 = True
 TOTAL = 32 * FPS  # 960
 
 # ---------------------------------------------------------------- Quellen
@@ -224,9 +224,11 @@ def cta(layer, x, y, t, size=70):
 
 # ---------------------------------------------------------------- Shots
 class Shot:
-    def __init__(self, a, b, src=None, start=0.0, speed=1.0, still=None, z=(1.0, 1.05), drift=(0, 0), mask=False):
+    def __init__(self, a, b, src=None, start=0.0, speed=1.0, still=None, z=(1.0, 1.05), drift=(0, 0), mask=False,
+                 off=(0, 0), over=1.08, dehaze=0.0):
         self.a, self.b, self.src, self.start, self.speed = a, b, src, start, speed
         self.still, self.z, self.drift, self.mask = still, z, drift, mask
+        self.off, self.over, self.dehaze = off, over, dehaze
 
     def src_dur(self):
         n = self.b - self.a
@@ -244,11 +246,22 @@ class Shot:
         if self.still is not None:
             img = self.still
         else:
-            fr = load_clip(self.src, self.start, self.src_dur())
+            fr = load_clip(self.src, self.start, self.src_dur(), self.over)
             img = sample(fr, self.t_src(k))
-        dx = self.drift[0] * (u - 0.5)
-        dy = self.drift[1] * (u - 0.5)
-        return grade(push(img, ease_inout(u), self.z[0], self.z[1], dx, dy))
+        dx = self.off[0] + self.drift[0] * (u - 0.5)
+        dy = self.off[1] + self.drift[1] * (u - 0.5)
+        out = push(img, ease_inout(u), self.z[0], self.z[1], dx, dy)
+        if self.dehaze:
+            out = dehaze(out, self.dehaze)
+        return grade(out)
+
+
+def dehaze(img, k):
+    """Nebel: Tonwerte spreizen (1.–99. Perzentil je Kanal gemeinsam), Mitten leicht absenken."""
+    f = img.astype(np.float32)
+    lo, hi = np.percentile(f, 1), np.percentile(f, 99.5)
+    g = np.clip((f - lo) / max(1, hi - lo), 0, 1) ** 1.15 * 255
+    return np.clip(f * (1 - k) + g * k, 0, 255).astype(np.uint8)
 
 
 def ease_inout(u):
@@ -288,10 +301,10 @@ SHOTS = {
     6: [Shot(510, 570, "IMG_0474", 2.6, 1.0, z=(1.02, 1.07), mask=True),
         Shot(570, 630, "DJI_20260106_111921_962", 4.4, ramp_fall, z=(1.03, 1.08))],
     7: [Shot(630, 690, still="man_lkw.jpg", z=(1.0, 1.06), drift=(70, 0)),
-        Shot(690, 750, still="teleskoplader.jpg", z=(1.0, 1.06), drift=(-70, 0))],
-    5: [Shot(360, 510, SZENE5, 0.0, 1.0, z=(1.0, 1.05))] if HAS5 else [],
+        Shot(690, 750, "IMG_0468", 1.6, 1.0, z=(1.02, 1.07), drift=(-40, 0))],
+    5: [Shot(360, 510, SZENE5, 1.4, 1.0, z=(1.0, 1.06))],
     8: [Shot(750, 810, "IMG_0209", 14.4, 1.0, z=(1.0, 1.05), drift=(0, -50), mask=True)],
-    9: [Shot(810, 960, "IMG_0460", 6.4, 1.0, z=(1.0, 1.06))],
+    9: [Shot(810, 960, "IMG_3569", 0.6, 1.0, z=(1.45, 1.55), off=(0, -110), over=1.6, dehaze=0.85)],
 }
 SCENE_RANGE = {1: (0, 60), 2: (60, 150), 3: (150, 240), 4: (240, 360), 5: (360, 510),
                6: (510, 630), 7: (630, 750), 8: (750, 810), 9: (810, 960)}
@@ -474,7 +487,7 @@ def render(f):
     if s == 6:
         yy = np.linspace(0, 1, H, dtype=np.float32)[:, None, None]
         img = (img * (1 - 0.5 * np.clip(1 - yy / 0.42, 0, 1) ** 1.2)).astype(np.uint8)
-    elif s == 5 and HAS5:  # Schrift unten über dem Stamm, Hände bleiben frei
+    elif s == 5 and HAS5:  # Schrift unten, Person bleibt frei
         yy = np.linspace(0, 1, H, dtype=np.float32)[:, None, None]
         img = (img * (1 - 0.55 * np.clip((yy - 0.5) / 0.3, 0, 1) ** 1.2)).astype(np.uint8)
     front, back = typo(f, layer)

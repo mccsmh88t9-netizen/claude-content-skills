@@ -79,8 +79,10 @@ def main():
     # leiser, dumpfer Teppich in der Stille (kein digitales Loch)
     fc.append(f"[{mi}:a]atrim={MUSIC_OFFSET + 12}:{MUSIC_OFFSET + 17},asetpts=PTS-STARTPTS,"
               f"lowpass=f=320,volume=0.07,afade=t=in:d=0.6,afade=t=out:st=4.7:d=0.3,adelay=12000:all=1[mpad]")
-    fc.append("[m1][m2][mpad]amix=inputs=3:normalize=0,volume=0.55[mraw]")
-    fc.append("[mraw][vsc1]sidechaincompress=threshold=0.04:ratio=5:attack=15:release=250[mus]")
+    # Musik präsent halten: etwas Bass raus, Präsenz rein (Handylautsprecher), nur sanft unter die Stimme ducken
+    fc.append("[m1][m2][mpad]amix=inputs=3:normalize=0,bass=g=-4:f=110,"
+              "equalizer=f=2200:t=q:w=1.2:g=4,equalizer=f=5500:t=q:w=1:g=2,volume=0.95[mraw]")
+    fc.append("[mraw][vsc1]sidechaincompress=threshold=0.12:ratio=2.5:attack=20:release=300[mus]")
 
     # Originalton
     slabels = []
@@ -91,11 +93,14 @@ def main():
                   f"adelay={int(dest * 1000)}:all=1[s{i}]")
         slabels.append(f"[s{i}]")
     fc.append(f"{''.join(slabels)}amix=inputs={len(slabels)}:normalize=0,highpass=f=40,"
-              f"loudnorm=I=-24:TP=-6,volume=0.9[sraw]")
+              f"loudnorm=I=-22:TP=-5,volume=0.9[sraw]")
     fc.append("[sraw][vsc2]sidechaincompress=threshold=0.05:ratio=4:attack=10:release=200[sfx]")
 
-    fc.append(f"[vo][mus][sfx]amix=inputs=3:normalize=0,apad=whole_dur={DUR},atrim=0:{DUR},"
-              f"loudnorm=I=-14:TP=-1:LRA=9,aresample=48000,apad=whole_dur={DUR}[out]")
+    stem = os.environ.get("STEM")  # Messmodus: nur eine Spur, ohne Summen-Normalisierung
+    weights = {"vo": "1 0 0", "mus": "0 1 0", "sfx": "0 0 1"}.get(stem, "1 1 1")
+    norm = "" if stem else "loudnorm=I=-14:TP=-1:LRA=9,"
+    fc.append(f"[vo][mus][sfx]amix=inputs=3:normalize=0:weights={weights},apad=whole_dur={DUR},atrim=0:{DUR},"
+              f"{norm}aresample=48000,apad=whole_dur={DUR}[out]")
 
     wav = os.path.join(OUT, "ton_mix.wav")
     subprocess.run(["ffmpeg", "-v", "error", "-y", *inputs, "-filter_complex", ";".join(fc),
