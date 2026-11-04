@@ -14,7 +14,7 @@ VOICE_EINSTIEG = os.path.join(TON, "sprecher_knox_einstieg.mp3")
 VOICE_BENEFITS = os.path.join(TON, "sprecher_knox_benefits_v2.mp3")  # neuer Einstieg (ersetzt „Keine Ausbildung? Egal.“)
 MUSIC = os.path.join(TON, "musik_v2.mp3")
 MUSIC_OFFSET = 0.064  # erster Beat der Musik liegt 64 ms nach 0 -> auf Raster ziehen
-DUR = 38.0
+DUR = 36.0
 
 # (Quelle von, bis, Ziel im Video, Tempo) – Sätze aus dem Knox-Take, auf die Schrift-Einschläge gelegt
 LINES = [
@@ -26,15 +26,15 @@ LINES = [
     (7.35, 8.40, 9.25, 1.0),   # Echte Natur.
     (8.60, 9.61, 10.50, 1.0),  # Bei jedem Wetter.
     (9.91, 11.63, 12.15, 1.0),  # Du brauchst keine Vorkenntnisse.
-    (11.88, 13.26, 17.00, 1.0),  # Wir zeigen dir, wie's geht.
-    (13.77, 15.10, 21.05, 1.0),  # Moderner Maschinenpark.
-    (15.30, 16.29, 22.42, 1.0),  # Faire Vergütung.
-    (16.76, 18.71, 23.45, 1.12),  # Jeden Tag ein anderer Einsatz.
-    (0.00, 5.70, 25.35, 1.05, "benefits"),  # Dienstrad-Leasing, Urlaubsgeld und Weihnachtsgeld, vermögenswirksame Leistungen.
-    (19.04, 20.91, 31.22, 1.0),  # Ob Quereinsteiger oder Profi:
-    (21.13, 22.34, 33.12, 1.0),  # Wir wollen dich.
-    (22.91, 24.84, 34.35, 1.0),  # Bischof Baumpflege aus Wiefelstede.
-    (25.19, 26.09, 36.35, 1.0),  # Jetzt bewerben.
+    (11.88, 13.26, 15.00, 1.0),  # Wir zeigen dir, wie's geht.
+    (13.77, 15.10, 19.05, 1.0),  # Moderner Maschinenpark.
+    (15.30, 16.29, 20.42, 1.0),  # Faire Vergütung.
+    (16.76, 18.71, 21.45, 1.12),  # Jeden Tag ein anderer Einsatz.
+    (0.00, 5.70, 23.35, 1.05, "benefits"),  # Dienstrad-Leasing, Urlaubsgeld und Weihnachtsgeld, vermögenswirksame Leistungen.
+    (19.04, 20.91, 29.22, 1.0),  # Ob Quereinsteiger oder Profi:
+    (21.13, 22.34, 31.12, 1.0),  # Wir wollen dich.
+    (22.91, 24.84, 32.35, 1.0),  # Bischof Baumpflege aus Wiefelstede.
+    (25.19, 26.09, 34.35, 1.0),  # Jetzt bewerben.
 ]
 
 
@@ -76,18 +76,18 @@ def main():
               f"highpass=f=90,acompressor=threshold=-20dB:ratio=3:attack=5:release=80,"
               f"loudnorm=I=-15:TP=-2:LRA=7,apad=whole_dur={DUR},asplit=3[vo][vsc1][vsc2]")
 
-    # Musik: Aufbau 0–12 s, harte Stille 12–17 s, Drop ab 17 s
+    # Musik: Aufbau 0–12 s, harte Stille 12–15 s, Drop ab 15 s
     mi = add(MUSIC)
     fc.append(f"[{mi}:a]atrim={MUSIC_OFFSET}:{MUSIC_OFFSET + 12},asetpts=PTS-STARTPTS,"
               f"afade=t=out:st=11.96:d=0.04[m1]")
     fc.append(f"[{mi}:a]atrim={MUSIC_OFFSET + 17}:{MUSIC_OFFSET + 25.02},asetpts=PTS-STARTPTS,"
-              f"afade=t=in:d=0.005,afade=t=out:st=7.99:d=0.03,adelay=17000:all=1[m2a]")
+              f"afade=t=in:d=0.005,afade=t=out:st=7.99:d=0.03,adelay=15000:all=1[m2a]")
     fc.append(f"[{mi}:a]atrim={MUSIC_OFFSET + 19}:{MUSIC_OFFSET + 32},asetpts=PTS-STARTPTS,"
-              f"afade=t=in:d=0.02,afade=t=out:st={13 - 0.6}:d=0.6,adelay=25000:all=1[m2b]")
+              f"afade=t=in:d=0.02,afade=t=out:st={13 - 0.6}:d=0.6,adelay=23000:all=1[m2b]")
     fc.append("[m2a][m2b]amix=inputs=2:normalize=0[m2]")
     # leiser, dumpfer Teppich in der Stille (kein digitales Loch)
-    fc.append(f"[{mi}:a]atrim={MUSIC_OFFSET + 12}:{MUSIC_OFFSET + 17},asetpts=PTS-STARTPTS,"
-              f"lowpass=f=320,volume=0.07,afade=t=in:d=0.6,afade=t=out:st=4.7:d=0.3,adelay=12000:all=1[mpad]")
+    fc.append(f"[{mi}:a]atrim={MUSIC_OFFSET + 12}:{MUSIC_OFFSET + 15},asetpts=PTS-STARTPTS,"
+              f"lowpass=f=320,volume=0.07,afade=t=in:d=0.6,afade=t=out:st=2.7:d=0.3,adelay=12000:all=1[mpad]")
     # Musik präsent halten: etwas Bass raus, Präsenz rein (Handylautsprecher), nur sanft unter die Stimme ducken
     fc.append("[m1][m2][mpad]amix=inputs=3:normalize=0,bass=g=-4:f=110,"
               "equalizer=f=2200:t=q:w=1.2:g=4,equalizer=f=5500:t=q:w=1:g=2,volume=0.95[mraw]")
