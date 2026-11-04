@@ -44,7 +44,59 @@ def _build_luts():
 LUT_R, LUT_G, LUT_B = _build_luts()
 
 
+def _build_luts_kino():
+    """Kinolook: tiefe Schwärzen, kräftige S-Kurve, weiche Schulter, Teal-Schatten, warme Lichter."""
+    x = np.linspace(0, 1, 256)
+    s = 1 / (1 + np.exp(-9.5 * (x - 0.46)))
+    s = (s - s[0]) / (s[-1] - s[0])
+    tone = 0.22 * x + 0.78 * s
+    tone = tone ** 1.06  # Mitten etwas dichter
+    tone = np.where(tone > 0.68, 0.68 + (tone - 0.68) * 0.55, tone)  # Schulter: Himmel bleibt gezeichnet
+    tone = tone * 0.985 + 0.008  # Schwarz kaum angehoben
+    shadow = np.clip(1 - x / 0.55, 0, 1) ** 1.3
+    warm = np.clip(1 - np.abs(x - 0.6) / 0.25, 0, 1)  # Wärme in den oberen Mitten (Haut, Holz, Schnittschutz)
+    top = np.clip((x - 0.82) / 0.18, 0, 1)  # Spitzlichter/Himmel neutral-kühl
+    r = tone - 0.050 * shadow + 0.035 * warm - 0.030 * top
+    g = tone + 0.012 * shadow + 0.010 * warm - 0.004 * top
+    b = tone + 0.045 * shadow - 0.030 * warm + 0.026 * top
+    return [np.clip(c * 255, 0, 255).astype(np.uint8) for c in (r, g, b)]
+
+
+KINO_R, KINO_G, KINO_B = _build_luts_kino()
+LOOK = os.environ.get("LOOK", "kino")
+
+
 def grade(rgb):
+    if LOOK == "kino":
+        return grade_kino(rgb)
+    return grade_winter(rgb)
+
+
+def grade_kino(rgb):
+    f0 = rgb.astype(np.float32)
+    # Klarheit: lokaler Kontrast in den Mitten (gegen den flauen Wintertag)
+    lum0 = f0 @ np.array([0.299, 0.587, 0.114], np.float32)
+    blur = cv2.GaussianBlur(lum0, (0, 0), 28)
+    mid = 1 - np.abs(lum0 / 127.5 - 1)
+    f0 += (0.38 * (lum0 - blur) * mid)[..., None]
+    src = np.clip(f0, 0, 255).astype(np.uint8)
+    out = np.empty_like(src)
+    out[..., 0] = KINO_R[src[..., 0]]
+    out[..., 1] = KINO_G[src[..., 1]]
+    out[..., 2] = KINO_B[src[..., 2]]
+    f = out.astype(np.float32)
+    lum = f @ np.array([0.299, 0.587, 0.114], np.float32)
+    hsv = cv2.cvtColor(src, cv2.COLOR_RGB2HSV)
+    h = hsv[..., 0].astype(np.float32)
+    green = np.clip(1 - np.abs(h - 45) / 25, 0, 1)
+    orange = np.clip(1 - np.abs(h - 13) / 11, 0, 1)
+    sat = 1.1 + 0.38 * green + 0.5 * orange
+    sat *= 1 - 0.3 * np.clip((lum - 180) / 60, 0, 1)
+    f = lum[..., None] + (f - lum[..., None]) * sat[..., None]
+    return np.clip(f, 0, 255).astype(np.uint8)
+
+
+def grade_winter(rgb):
     """rgb uint8 HxWx3 -> graded uint8."""
     out = np.empty_like(rgb)
     out[..., 0] = LUT_R[rgb[..., 0]]
@@ -67,7 +119,7 @@ def grade(rgb):
 def _vignette():
     yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
     d = np.sqrt(((xx - W / 2) / (W * 0.62)) ** 2 + ((yy - H * 0.48) / (H * 0.6)) ** 2)
-    v = 1 - 0.42 * np.clip(d - 0.45, 0, 1) ** 1.4
+    v = 1 - 0.55 * np.clip(d - 0.42, 0, 1) ** 1.3
     top = 1 - 0.38 * np.clip(1 - yy / 420, 0, 1) ** 1.6  # Brand-Zeile oben
     return (v * top)[..., None]
 
