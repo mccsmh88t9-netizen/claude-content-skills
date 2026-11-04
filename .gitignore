@@ -6,3 +6,4 @@ node_modules/
 projects/*/render/cache/
 __pycache__/
 projects/*/render/out/ton_mix.wav
+projects/*/render/out/video_stumm.mp4
