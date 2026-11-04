@@ -94,7 +94,7 @@ Ton: Originalgeräusche aus dem Footage (Säge, Häcksler, Hydraulik) + Musik + 
 - Musik war kaum hörbar (stark geduckt, fast nur Bass). Neu: Bass −4 dB, Präsenz +4 dB bei 2,2 kHz, sanftes Ducking. Messung: Stimme −15,4 LUFS, Musik −20,5 LUFS, O-Ton angehoben.
 
 ## Ergebnis
-- **`render/out/bischof_recruiting_final.mp4`**: 32 s, 1080×1920, 30 fps, H.264 + AAC, 40 MB, −14,2 LUFS, Kinolook (`LOOK=winter` für den alten Look). `video_stumm.mp4` ist Zwischenprodukt und nicht mehr im Git.
+- **`render/out/bischof_recruiting_final.mp4`**: 32 s, 1080×1920, 30 fps, H.264 + AAC, 37 MB, −14,2 LUFS, Kinolook mit leichtem Entrauschen und sanfter Kurve (`LOOK=winter` für den alten Look). `video_stumm.mp4` ist Zwischenprodukt und nicht mehr im Git.
 - Neu bauen: `python3 render/build.py` (Bild), dann `python3 render/mix.py` (Ton + finales MP4).
 
 ## Offen
