@@ -73,12 +73,24 @@ Ton: Originalgeräusche aus dem Footage (Säge, Häcksler, Hydraulik) + Musik + 
 - Sprecher, Musik, SFX noch nicht abgefragt, passen nach einer 1080p-Szene 5 nicht mehr ins Guthaben.
 - Euro-Preis pro Credit weiterhin offen.
 
-## Szene 5 erzeugt (04.11.2026)
-- Seedance 2.5 ist im Basic-Tarif gesperrt (auch ohne Entwurf). Freigegeben und erzeugt: **Seedance 2.0 Fast, 720p, 5 s, 9:16, ohne Ton, 12,5 Credits**.
-- Job-ID `52046cb6-1f13-41b1-8776-09289693012d`. Download blockiert: Host `d8j0ntlcm91z4.cloudfront.net` ist im Sitzungsnetz nicht freigegeben.
-- Ablage: `ki/szene5_anlernen.mp4`. Sobald die Datei dort liegt, nutzt `render/build.py` sie automatisch statt des Platzhalters.
+## Szene 5 (04.11.2026)
+- Seedance 2.5 ist im Basic-Tarif gesperrt (auch ohne Entwurf). Freigegeben und erzeugt: **Seedance 2.0 Fast, 720p, 5 s, 9:16, ohne Ton, 12,5 Credits**, Job `52046cb6-1f13-41b1-8776-09289693012d`, Datei `ki/szene5_anlernen.mp4`.
+- Schrift in Szene 5 ins untere Drittel gesetzt, damit die Hände frei bleiben.
+- Bekannte Schwächen: Ausbilder ohne Handschuhe, Säge wird in der Luft gehalten.
 
-## Nächste Schritte
-1. Domain `d8j0ntlcm91z4.cloudfront.net` (oder `*.cloudfront.net`) in der Umgebung freigeben, Clip laden, Stil-Check Szene 5.
-2. Sprecher, Musik (120 BPM), SFX abfragen und erzeugen, Ton mischen, Gesamt-Stil-Check, finales MP4.
-3. Euro-Preis pro Credit weiterhin offen.
+## Ton (04.11.2026)
+- Sprecher: **Knox** (ElevenLabs v4), gewählt aus 3 Tests (Max, Bram, Knox), je 1,84 Credits. Dateien in `ton/`.
+- Musik: `ton/musik_v2.mp3` (ElevenLabs Music v2.5, 4,66 Credits), gemessen 120,07 BPM, Versatz 64 ms korrigiert. Erster Entwurf `ton/musik.mp3` lief mit ~160 BPM (verworfen, 4,66 Credits).
+- Aufbau im Schnitt erzeugt: Musik 0–12 s, harte Stille 12–17 s mit sehr leisem, dumpfem Teppich, Drop bei 17 s.
+- Geräusche: Originalton aus dem Footage je Shot. Das Geräusch-Modell von Higgsfield ist nur für Spiele freigegeben.
+- Mix: `render/mix.py` (Sätze auf Schrift-Einschläge, Musik per Sidechain unter der Stimme). Ergebnis −14,3 LUFS, Spitze −4 dBFS.
+- Typo an Stimme angepasst: „ANPACKEN.“ auf 7,0 s, Chips auf 21,1 / 22,4 / 23,5 s.
+- Ausgaben gesamt: 12,5 + 3 × 1,84 + 2 × 4,66 = **27,34 Credits**. Euro-Preis pro Credit weiterhin offen.
+
+## Ergebnis
+- **`render/out/bischof_recruiting_final.mp4`**: 32 s, 1080×1920, 30 fps, H.264 + AAC, 40 MB. Gesamt-Stil-Check bestanden.
+- Neu bauen: `python3 render/build.py` (Bild), dann `python3 render/mix.py` (Ton + finales MP4).
+
+## Offen
+- Freigabe durch Nutzer/Kunde. Optional: Szene 5 neu erzeugen (Handschuhe, Säge auf dem Stamm), 12,5 Credits.
+- Euro-Preis pro Credit.
