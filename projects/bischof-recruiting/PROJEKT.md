@@ -93,8 +93,15 @@ Ton: Originalgeräusche aus dem Footage (Säge, Häcksler, Hydraulik) + Musik + 
 - Szene 9: Lkw-Front `IMG_0460` ersetzt durch `IMG_3569` (Hubsteiger im Nebel), mit Tonwertspreizung gegen den Nebel. Die gelbe Warnleuchte trägt den Licht-Match-Cut aufs Logo.
 - Musik war kaum hörbar (stark geduckt, fast nur Bass). Neu: Bass −4 dB, Präsenz +4 dB bei 2,2 kHz, sanftes Ducking. Messung: Stimme −15,4 LUFS, Musik −20,5 LUFS, O-Ton angehoben.
 
+## Änderungen 04.11.2026 (Runde 3)
+- Einstieg neu (Kritik der Kollegen an „Keine Ausbildung? Egal.“): „BEREIT FÜR WAS NEUES?“ → „HIER.“, Sprecher „Bereit für was Neues? Dann bist du hier richtig.“ (`ton/sprecher_knox_einstieg.mp3`, 0,46 Credits).
+- „ECHTE NATUR.“ mit `IMG_0452` (Bäume im Nebel).
+- Benefits um Dienstrad-Leasing, Urlaubs- und Weihnachtsgeld, vermögenswirksame Leistungen erweitert (`ton/sprecher_knox_benefits.mp3`, 0,46 Credits). Benefit-Szene 21–31 s mit drittem Shot `IMG_52F7A0A2` (Kronenabwurf).
+- Szene 8 mit neuem Kletterer `IMG_3412`.
+- Video jetzt **38 s**. Musik-Drop um 3 Takte verlängert (Quelle 17–25 s, dann 19–32 s).
+
 ## Ergebnis
-- **`render/out/bischof_recruiting_final.mp4`**: 32 s, 1080×1920, 30 fps, H.264 + AAC, 37 MB, −14,2 LUFS, Kinolook mit leichtem Entrauschen und sanfter Kurve (`LOOK=winter` für den alten Look). `video_stumm.mp4` ist Zwischenprodukt und nicht mehr im Git.
+- **`render/out/bischof_recruiting_final.mp4`**: 38 s, 1080×1920, 30 fps, H.264 + AAC, 42 MB, −14,0 LUFS, Kinolook mit leichtem Entrauschen und sanfter Kurve (`LOOK=winter` für den alten Look). `video_stumm.mp4` ist Zwischenprodukt und nicht mehr im Git.
 - Neu bauen: `python3 render/build.py` (Bild), dann `python3 render/mix.py` (Ton + finales MP4).
 
 ## Offen
