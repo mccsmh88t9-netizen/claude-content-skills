@@ -353,8 +353,8 @@ def typo(f, layer):
         slam_words(back, [("EGAL.", FLEET)], 52, 330, 64, f, 500)
     elif s == 3:
         kicker(layer, "BEI UNS ZÄHLT NUR EINS", 62, 300, f - 152)
-        slam_words(layer, [("ANPACKEN.", None)], 56, 400, 180, f, 230)
-        green_bar(layer, 64, 700, 300, 22, f - 184)
+        slam_words(layer, [("ANPACKEN.", None)], 56, 400, 210, f, 230)
+        green_bar(layer, 64, 700, 300, 22, f - 214)
     elif s == 4:
         if f < 300:
             slam_words(layer, [("GROSSE", None, 0), ("MASCHINEN.", FLEET, 1)], 60, 360, 240, f, 200)
@@ -370,9 +370,9 @@ def typo(f, layer):
                    60, 300, 510, f, 175, stagger=3)
     elif s == 7:
         kicker(layer, "DAS BEKOMMST DU", 62, 300, f - 632)
-        chip(layer, "MODERNER MASCHINENPARK", 60, 420, f - 636)
-        chip(layer, "FAIRE VERGÜTUNG", 60, 530, f - 666)
-        chip(layer, "VIELFÄLTIGE EINSÄTZE", 60, 640, f - 696)
+        chip(layer, "MODERNER MASCHINENPARK", 60, 420, f - 632)
+        chip(layer, "FAIRE VERGÜTUNG", 60, 530, f - 673)
+        chip(layer, "VIELFÄLTIGE EINSÄTZE", 60, 640, f - 705)
     elif s == 8:
         slam_words(back, [("QUEREINSTEIGER?", None, 0)], 56, 330, 752, f, 160)
         slam_words(back, [("PROFI?", None, 0)], 56, 480, 767, f, 160)
