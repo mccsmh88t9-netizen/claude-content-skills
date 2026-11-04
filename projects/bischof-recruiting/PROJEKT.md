@@ -87,10 +87,16 @@ Ton: Originalgeräusche aus dem Footage (Säge, Häcksler, Hydraulik) + Musik + 
 - Typo an Stimme angepasst: „ANPACKEN.“ auf 7,0 s, Chips auf 21,1 / 22,4 / 23,5 s.
 - Ausgaben gesamt: 12,5 + 3 × 1,84 + 2 × 4,66 = **27,34 Credits**. Euro-Preis pro Credit weiterhin offen.
 
+## Änderungen nach Kundenfeedback (04.11.2026)
+- Szene 5: KI-Shot (Hände an der Säge, wirkte unnatürlich) ersetzt durch echtes Footage `DJI_20260106_111743_142` (Aufasten am Stamm mit Greifer). `ki/szene5_anlernen.mp4` wird nicht mehr genutzt.
+- Szene 7 „Das bekommst du“: Teleskoplader-Foto ersetzt durch Video `IMG_0468` (Fällkran).
+- Szene 9: Lkw-Front `IMG_0460` ersetzt durch `IMG_3569` (Hubsteiger im Nebel), mit Tonwertspreizung gegen den Nebel. Die gelbe Warnleuchte trägt den Licht-Match-Cut aufs Logo.
+- Musik war kaum hörbar (stark geduckt, fast nur Bass). Neu: Bass −4 dB, Präsenz +4 dB bei 2,2 kHz, sanftes Ducking. Messung: Stimme −15,4 LUFS, Musik −20,5 LUFS, O-Ton angehoben.
+
 ## Ergebnis
-- **`render/out/bischof_recruiting_final.mp4`**: 32 s, 1080×1920, 30 fps, H.264 + AAC, 40 MB. Gesamt-Stil-Check bestanden.
+- **`render/out/bischof_recruiting_final.mp4`**: 32 s, 1080×1920, 30 fps, H.264 + AAC, 40 MB, −14,2 LUFS.
 - Neu bauen: `python3 render/build.py` (Bild), dann `python3 render/mix.py` (Ton + finales MP4).
 
 ## Offen
-- Freigabe durch Nutzer/Kunde. Optional: Szene 5 neu erzeugen (Handschuhe, Säge auf dem Stamm), 12,5 Credits.
+- Freigabe durch Nutzer/Kunde.
 - Euro-Preis pro Credit.
