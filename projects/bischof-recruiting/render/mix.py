@@ -10,14 +10,15 @@ ROOT = build.ROOT
 TON = os.path.join(ROOT, "ton")
 OUT = build.OUT
 VOICE = os.path.join(TON, "sprecher_knox.mp3")
+VOICE_EINSTIEG = os.path.join(TON, "sprecher_knox_einstieg.mp3")  # neuer Einstieg (ersetzt „Keine Ausbildung? Egal.“)
 MUSIC = os.path.join(TON, "musik_v2.mp3")
 MUSIC_OFFSET = 0.064  # erster Beat der Musik liegt 64 ms nach 0 -> auf Raster ziehen
 DUR = 32.0
 
 # (Quelle von, bis, Ziel im Video, Tempo) – Sätze aus dem Knox-Take, auf die Schrift-Einschläge gelegt
 LINES = [
-    (0.00, 1.30, 0.40, 1.0),   # Keine Ausbildung?
-    (1.70, 2.22, 2.10, 1.0),   # Egal.
+    (0.00, 1.36, 0.40, 1.0, "einstieg"),   # Bereit für was Neues?
+    (1.78, 3.03, 2.00, 1.0, "einstieg"),   # Dann bist du hier richtig.
     (2.58, 4.00, 5.00, 1.0),   # Bei uns zählt nur eins:
     (4.18, 5.66, 6.51, 1.0),   # dass du anpacken willst.  ("anpacken" auf 7,0 s)
     (6.02, 7.08, 8.00, 1.0),   # Große Maschinen.
@@ -60,10 +61,12 @@ def main():
 
     # Sprecher
     vi = add(VOICE)
+    ei = add(VOICE_EINSTIEG)
     vlabels = []
-    for i, (s, e, d, tempo) in enumerate(LINES):
+    for i, (s, e, d, tempo, *src) in enumerate(LINES):
         t = f",atempo={tempo}" if tempo != 1.0 else ""
-        fc.append(f"[{vi}:a]atrim={s}:{e},asetpts=PTS-STARTPTS{t},afade=t=in:d=0.02,"
+        inp = ei if src else vi
+        fc.append(f"[{inp}:a]atrim={s}:{e},asetpts=PTS-STARTPTS{t},afade=t=in:d=0.02,"
                   f"afade=t=out:st={(e - s) / tempo - 0.04:.3f}:d=0.04,adelay={int(d * 1000)}:all=1[v{i}]")
         vlabels.append(f"[v{i}]")
     fc.append(f"{''.join(vlabels)}amix=inputs={len(vlabels)}:normalize=0,"

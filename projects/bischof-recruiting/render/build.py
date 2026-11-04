@@ -368,10 +368,10 @@ def typo(f, layer):
     back = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     s = scene_of(f)
     if s == 1:
-        slam_words(layer, [("KEINE", None, 0), ("AUSBILDUNG?", None, 1)], 64, 470, 15, f, 210)
+        slam_words(layer, [("BEREIT FÜR", None, 0), ("WAS NEUES?", None, 1)], 64, 470, 15, f, 190)
     elif s == 2:
-        kicker(layer, "KEINE AUSBILDUNG?", 62, 300, f - 60)
-        slam_words(back, [("EGAL.", FLEET)], 52, 330, 64, f, 500)
+        kicker(layer, "BEREIT FÜR WAS NEUES?", 62, 300, f - 60)
+        slam_words(back, [("HIER.", FLEET)], 52, 330, 75, f, 500)
     elif s == 3:
         kicker(layer, "BEI UNS ZÄHLT NUR EINS", 62, 300, f - 152)
         slam_words(layer, [("ANPACKEN.", None)], 56, 400, 210, f, 230)
