@@ -96,7 +96,7 @@ Ton: Originalgeräusche aus dem Footage (Säge, Häcksler, Hydraulik) + Musik + 
 ## Änderungen 04.11.2026 (Runde 3)
 - Einstieg neu (Kritik der Kollegen an „Keine Ausbildung? Egal.“): „BEREIT FÜR WAS NEUES?“ → „HIER.“, Sprecher „Bereit für was Neues? Dann bist du hier richtig.“ (`ton/sprecher_knox_einstieg.mp3`, 0,46 Credits).
 - „ECHTE NATUR.“ mit `IMG_0452` (Bäume im Nebel).
-- Benefits um Dienstrad-Leasing, Urlaubs- und Weihnachtsgeld, vermögenswirksame Leistungen erweitert (`ton/sprecher_knox_benefits.mp3`, 0,46 Credits). Benefit-Szene 21–31 s mit drittem Shot `IMG_52F7A0A2` (Kronenabwurf).
+- Benefits um Dienstrad-Leasing, Urlaubs- und Weihnachtsgeld, vermögenswirksame Leistungen erweitert (`ton/sprecher_knox_benefits_v2.mp3`, fließend neu eingesprochen „Urlaubsgeld und Weihnachtsgeld“, insgesamt 0,92 Credits). Benefit-Szene 21–31 s mit drittem Shot `IMG_52F7A0A2` (Kronenabwurf).
 - Szene 8 mit neuem Kletterer `IMG_3412`.
 - Video jetzt **38 s**. Musik-Drop um 3 Takte verlängert (Quelle 17–25 s, dann 19–32 s).
 
