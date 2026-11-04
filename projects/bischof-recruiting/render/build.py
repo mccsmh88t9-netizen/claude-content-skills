@@ -18,7 +18,10 @@ OUT = os.path.join(ROOT, "render/out")
 CACHE = os.path.join(ROOT, "render/cache")
 os.makedirs(OUT, exist_ok=True)
 os.makedirs(CACHE, exist_ok=True)
-FOOT = lambda n: os.path.join(ROOT, "footage", n + (".mov" if n.startswith("IMG") else "_video.mov"))
+FOOT = lambda n: (os.path.join(ROOT, "ki", n) if n.endswith(".mp4") else
+                  os.path.join(ROOT, "footage", n + (".mov" if n.startswith("IMG") else "_video.mov")))
+SZENE5 = "szene5_anlernen.mp4"  # KI-Shot (Higgsfield), liegt in ki/
+HAS5 = os.path.exists(os.path.join(ROOT, "ki", SZENE5))
 TOTAL = 32 * FPS  # 960
 
 # ---------------------------------------------------------------- Quellen
@@ -286,6 +289,7 @@ SHOTS = {
         Shot(570, 630, "DJI_20260106_111921_962", 4.4, ramp_fall, z=(1.03, 1.08))],
     7: [Shot(630, 690, still="man_lkw.jpg", z=(1.0, 1.06), drift=(70, 0)),
         Shot(690, 750, still="teleskoplader.jpg", z=(1.0, 1.06), drift=(-70, 0))],
+    5: [Shot(360, 510, SZENE5, 0.0, 1.0, z=(1.0, 1.05))] if HAS5 else [],
     8: [Shot(750, 810, "IMG_0209", 14.4, 1.0, z=(1.0, 1.05), drift=(0, -50), mask=True)],
     9: [Shot(810, 960, "IMG_0460", 6.4, 1.0, z=(1.0, 1.06))],
 }
@@ -453,7 +457,7 @@ def render(f):
     if f < 15:  # Schwarz + Anwerfzug
         img = np.zeros((H, W, 3), np.uint8)
         return img
-    if s == 5:
+    if s == 5 and not HAS5:
         img, layer = placeholder(f)
         sh = None
     elif s == 9 and f >= FLASH:
@@ -467,7 +471,7 @@ def render(f):
     else:
         img, sh = base_frame(f)
         layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    if s == 6:
+    if s in (5, 6):
         yy = np.linspace(0, 1, H, dtype=np.float32)[:, None, None]
         img = (img * (1 - 0.5 * np.clip(1 - yy / 0.42, 0, 1) ** 1.2)).astype(np.uint8)
     front, back = typo(f, layer)
@@ -502,7 +506,7 @@ def render(f):
         u = 1 - d / 6
         img = cv2.addWeighted(img, 1 - u * 0.9, np.full_like(img, 250), u * 0.9, 0)
 
-    grain = 4.5 if s == 5 or (s == 9 and f >= FLASH) else 7.0
+    grain = 4.5 if (s == 5 and not HAS5) or (s == 9 and f >= FLASH) else 7.0
     return texture(img, f, grain, vignette=not (s == 9 and f >= FLASH))
 
 

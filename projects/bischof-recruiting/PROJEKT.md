@@ -73,7 +73,12 @@ Ton: Originalgeräusche aus dem Footage (Säge, Häcksler, Hydraulik) + Musik + 
 - Sprecher, Musik, SFX noch nicht abgefragt, passen nach einer 1080p-Szene 5 nicht mehr ins Guthaben.
 - Euro-Preis pro Credit weiterhin offen.
 
+## Szene 5 erzeugt (04.11.2026)
+- Seedance 2.5 ist im Basic-Tarif gesperrt (auch ohne Entwurf). Freigegeben und erzeugt: **Seedance 2.0 Fast, 720p, 5 s, 9:16, ohne Ton, 12,5 Credits**.
+- Job-ID `52046cb6-1f13-41b1-8776-09289693012d`. Download blockiert: Host `d8j0ntlcm91z4.cloudfront.net` ist im Sitzungsnetz nicht freigegeben.
+- Ablage: `ki/szene5_anlernen.mp4`. Sobald die Datei dort liegt, nutzt `render/build.py` sie automatisch statt des Platzhalters.
+
 ## Nächste Schritte
-1. Nutzer entscheidet: Szene 5 als Entwurf (15 Credits) oder direkt 1080p (80 Credits), ggf. Credits nachkaufen. Euro-Preis pro Credit erfragen.
-2. Szene 5 erzeugen, in `build.py` als Shot einsetzen (Platzhalter ersetzen), Stil-Check.
-3. Sprecher, Musik (120 BPM), SFX abfragen und erzeugen, Ton mischen, Gesamt-Stil-Check, finales MP4.
+1. Domain `d8j0ntlcm91z4.cloudfront.net` (oder `*.cloudfront.net`) in der Umgebung freigeben, Clip laden, Stil-Check Szene 5.
+2. Sprecher, Musik (120 BPM), SFX abfragen und erzeugen, Ton mischen, Gesamt-Stil-Check, finales MP4.
+3. Euro-Preis pro Credit weiterhin offen.
