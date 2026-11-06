@@ -1,0 +1,8 @@
+@font-face{font-family:BarlowCondensed;font-weight:700;src:url(../assets/fonts/BarlowCondensed-Bold.ttf)}
+@font-face{font-family:BarlowCondensed;font-weight:600;src:url(../assets/fonts/BarlowCondensed-SemiBold.ttf)}
+@font-face{font-family:BarlowCondensed;font-weight:500;src:url(../assets/fonts/BarlowCondensed-Medium.ttf)}
+@font-face{font-family:Barlow;font-weight:500;src:url(../assets/fonts/Barlow-Medium.ttf)}
+@font-face{font-family:Barlow;font-weight:400;src:url(../assets/fonts/Barlow-Regular.ttf)}
+@font-face{font-family:Caveat;font-weight:400 700;src:url(../assets/fonts/Caveat.ttf)}
+html,body{margin:0;padding:0;background:#F4F2EC}
+svg{display:block}
