@@ -74,6 +74,12 @@ export function defs(svg, boilSeed = 1) {
   el('feOffset', { dy: 8, result: 'ob' }, fs);
   el('feComponentTransfer', { in: 'ob', result: 'oc' }, fs).appendChild((() => { const f = document.createElementNS(NS, 'feFuncA'); f.setAttribute('type', 'linear'); f.setAttribute('slope', '0.18'); return f; })());
   const sm = el('feMerge', {}, fs); el('feMergeNode', { in: 'oc' }, sm); el('feMergeNode', { in: 'SourceGraphic' }, sm);
+  // wechselndes Filmkorn (4 Varianten)
+  for (let i = 0; i < 4; i++) {
+    const fg2 = el('filter', { id: 'grain' + i, x: 0, y: 0, width: '100%', height: '100%' }, d);
+    el('feTurbulence', { type: 'fractalNoise', baseFrequency: '0.85', numOctaves: 1, seed: 30 + i, result: 'g' }, fg2);
+    el('feColorMatrix', { in: 'g', type: 'matrix', values: '0 0 0 0 0.2  0 0 0 0 0.18  0 0 0 0 0.15  0 0 0 -1.4 1.1' }, fg2);
+  }
   // Vignette
   const rg = el('radialGradient', { id: 'vig', cx: '50%', cy: '45%', r: '75%' }, d);
   el('stop', { offset: '60%', 'stop-color': '#000', 'stop-opacity': 0 }, rg);

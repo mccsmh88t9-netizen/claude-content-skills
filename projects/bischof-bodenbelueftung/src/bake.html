@@ -1,0 +1,10 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:transparent}</style></head>
+<body><svg id="s" width="1080" height="1920" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg"></svg>
+<script type="module">
+import { el, defs, W, H, C } from './lib.js';
+const svg = document.getElementById('s'); defs(svg, 1);
+const q = new URLSearchParams(location.search).get('k');
+if (q === 'paper') { el('rect', { x: 0, y: 0, width: W, height: H, fill: C.paper }, svg); el('rect', { x: 0, y: 0, width: W, height: H, filter: 'url(#paperTex)', opacity: 0.32 }, svg); }
+else el('rect', { x: 0, y: 0, width: W, height: H, filter: `url(#grain${q})`, opacity: 0.08 }, svg);
+window.READY = true;
+</script></body></html>
