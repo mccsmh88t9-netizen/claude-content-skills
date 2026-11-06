@@ -217,8 +217,9 @@ export function text(parent, str, x, y, { size = 100, family = 'BarlowCondensed'
 }
 
 // ---------- Bild-Assets (KI-Zeichnungen, freigestellt) ----------
-export const POSES = { 1: [291, 665], 2: [410, 668], 3: [429, 668], 4: [440, 676], 5: [306, 705], 6: [356, 706] };
-export const PATCH = { 1: [164, 185, 36, 18], 2: [262, 189, 39, 18], 5: [103, 188, 109, 43], 6: [175, 196, 41, 19] };
+export const POSES = { 1: [290, 664], 2: [410, 667], 3: [432, 669], 4: [440, 678], 5: [306, 736], 6: [358, 729] };
+// Druckfläche [x, y, breite, höhe] im Freisteller (Brust links bzw. Rücken)
+export const PATCH = { 1: [168, 176, 46, 24], 2: [274, 180, 46, 24], 5: [86, 205, 134, 60], 6: [176, 200, 48, 25] };
 export function image(parent, href, x, y, w, h, extra = {}) {
   return el('image', { href, x, y, width: w, height: h, preserveAspectRatio: 'none', ...extra }, parent);
 }
@@ -233,12 +234,12 @@ export function figure(parent, pose, fx, fy, h, { flip = false, anchorX = 0.5, l
     const [px, py, qw, qh] = PATCH[pose];
     const X = -w * anchorX + px * s, Y = -H + 12 * s + py * s, PW = qw * s, PH = qh * s;
     const lg = el('g', { transform: flip ? `translate(${X + PW / 2},0) scale(-1,1) translate(${-(X + PW / 2)},0)` : '' }, g);
-    el('rect', { x: X - PW * 0.04, y: Y - PH * 0.06, width: PW * 1.08, height: PH * 1.12, rx: PH * 0.12, fill: '#F2EFE7' }, lg);
     const big = pose === 5;
-    const fs1 = PH * (big ? 0.36 : 0.40);
-    const t1 = el('text', { x: X + PW / 2, y: Y + PH * 0.46, 'font-family': 'BarlowCondensed', 'font-weight': 700, 'font-size': fs1, fill: '#1B1C1A', 'text-anchor': 'middle', 'letter-spacing': '0.06em' }, lg);
+    const fs1 = PH * (big ? 0.42 : 0.44);
+    const col = '#F7DC2E';
+    const t1 = el('text', { x: X + PW / 2, y: Y + PH * 0.45, 'font-family': 'BarlowCondensed', 'font-weight': 700, 'font-size': fs1, fill: col, 'text-anchor': 'middle', 'letter-spacing': '0.05em', opacity: 0.95 }, lg);
     t1.textContent = 'BISCHOF';
-    const t2 = el('text', { x: X + PW / 2, y: Y + PH * 0.86, 'font-family': 'BarlowCondensed', 'font-weight': 600, 'font-size': fs1 * 0.82, fill: '#F26B1D', 'text-anchor': 'middle', 'letter-spacing': '0.08em' }, lg);
+    const t2 = el('text', { x: X + PW / 2, y: Y + PH * 0.9, 'font-family': 'BarlowCondensed', 'font-weight': 600, 'font-size': fs1 * 0.8, fill: col, 'text-anchor': 'middle', 'letter-spacing': '0.07em', opacity: 0.95 }, lg);
     t2.textContent = 'BAUMPFLEGE';
   }
   return { g, s, w, H };

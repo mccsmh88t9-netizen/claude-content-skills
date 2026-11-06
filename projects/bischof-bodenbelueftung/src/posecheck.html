@@ -1,0 +1,11 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="fonts.css"></head>
+<body><svg id="s" width="1080" height="1920" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg"></svg>
+<script type="module">
+import { C, el, defs, paper, figure } from './lib.js';
+const svg = document.getElementById('s');
+await document.fonts.load('700 100px BarlowCondensed'); await document.fonts.load('600 40px BarlowCondensed');
+defs(svg, 2); paper(svg);
+figure(svg, 1, 180, 900, 800); figure(svg, 2, 560, 900, 800); figure(svg, 6, 900, 900, 800);
+figure(svg, 5, 300, 1880, 900); figure(svg, 4, 760, 1880, 700);
+window.READY = true;
+</script></body></html>
