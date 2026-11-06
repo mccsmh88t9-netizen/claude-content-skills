@@ -450,7 +450,7 @@ export function render(svg, t) {
   if (t < 10.42) {
     const g = el('g', {}, stage);
     const zk = ease.inOutQuint(clamp((t - 9.35) / 1.07));
-    const z = lerp(1, 16, zk) * lerp(1, 1.02, clamp(t / 9));
+    const z = lerp(1, 7, zk) * lerp(1, 1.02, clamp(t / 9));
     cam(g, lerp(540, 300, zk), lerp(960, GY + 150, zk), z);
     sceneOverview(g, t, 1);
     kicker(ui, '01 · DAS PROBLEM', t, 4.9, 9.1);
@@ -461,7 +461,7 @@ export function render(svg, t) {
   if (t >= 10.4 && t < 21.62) {
     const g = el('g', {}, stage);
     const zk = ease.outCubic(clamp((t - 10.4) / 1.1));
-    cam(g, lerp(330, 540, zk), lerp(1180, 945, zk), lerp(3.2, 1, zk) * (1 + 0.012 * (t - 10.4) / 11));
+    cam(g, lerp(330, 540, zk), lerp(1180, 945, zk), lerp(2.4, 1, zk) * (1 + 0.012 * (t - 10.4) / 11));
     scene2(g, t);
     kicker(ui, '02 · IM BODEN', t, 10.9, 20.7);
     const a = W_(2, 'Porenraum') - 0.1;
@@ -489,7 +489,7 @@ export function render(svg, t) {
     const lk = ease.inOutCubic(clamp((t - 33.25) / 0.95));
     cam(cg, lerp(540, INJ_X, lk), lerp(960, INJ_Y, lk), lerp(1.0, 2.2, lk) * lerp(1, 1.03, clamp((t - 21) / 12)));
     sceneOverview(cg, t, 3);
-    if (mask !== null) inkStroke(svg, [[mask + 300, -40], [mask - 300, H + 40]], { w: 70, color: C.orange, seed: 501, taper: false, filter: 'url(#marker)', opacity: 0.95 });
+    if (mask !== null) inkStroke(svg, [[mask + 300, -40], [mask - 300, H + 40]], { w: 120, color: C.orange, seed: 501, taper: false, filter: 'url(#marker)', opacity: 0.95 });
     kicker(ui, '03 · DIE LÖSUNG', t, 21.6, 32.9);
     const a = W_(3, 'Druckluftimpulse') - 0.05;
     kinetic(ui, 'BODENBELÜFTUNG', 76, 290, t, a, 32.8, { size: 118 });
@@ -528,6 +528,7 @@ export function render(svg, t) {
     // Seiten-Umblättern am Ende
     const pk = ease.inOutCubic(clamp((t - 54.45) / 0.9));
     if (pk > 0) g.setAttribute('transform', `translate(0,0) matrix(${1 - pk},${-0.18 * pk},0,1,0,${0})`);
+    paperImg(g);
     const cg = el('g', {}, g);
     cam(cg, lerp(INJ_X, 540, ok), lerp(INJ_Y, 930, ok), lerp(2.6, 1, ok) * lerp(1, 1.05, clamp((t - 45.5) / 9)));
     sceneOverview(cg, t, 5);
