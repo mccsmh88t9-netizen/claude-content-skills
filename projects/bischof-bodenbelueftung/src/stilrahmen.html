@@ -1,0 +1,52 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="fonts.css"></head>
+<body><svg id="s" width="1080" height="1920" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg"></svg>
+<script type="module">
+import { C, W, H, el, defs, paper, vignette, text, inkStroke, line, wobble, rng, smooth, image, figure } from './lib.js';
+import { drawTree, drawRoots, drawGround, drawSection, drawPulse } from './world.js';
+const svg = document.getElementById('s');
+await document.fonts.load('700 100px BarlowCondensed'); await document.fonts.load('600 40px BarlowCondensed');
+await document.fonts.load('500 40px Barlow'); await document.fonts.load('600 40px Caveat');
+defs(svg, 2); paper(svg);
+const gy = 1185;
+const world = el('g', {}, svg);
+const lx = 740, tip = gy + 175;
+const clip = drawSection(world, { y: gy, depth: 245, zones: [{ x0: 40, x1: 590, density: .95 }, { x0: 590, x1: 1040, density: .22 }], clear: { x: lx, y: tip, r: 120 } });
+drawRoots(world, { x: 380, groundY: gy, s: 0.88, clip });
+drawTree(world, { x: 380, groundY: gy, s: 0.84 });
+drawGround(world, { y: gy });
+// Injektionspunkt + Lanze (Platzhalter in Code, finale Lanze aus Geo-Injector-Zeichnung)
+drawPulse(world, { x: lx, y: tip - 6, k: 1, maxR: 150 });
+// Lanze unter der Erde (Code) + Lanze über der Erde (Zeichnung)
+inkStroke(world, [[lx, gy + 2], [lx, tip]], { w: 5, seed: 5, taper: false });
+inkStroke(world, [[lx - 6, tip - 14], [lx, tip + 8], [lx + 6, tip - 14]], { w: 3, seed: 6 });
+const Hl = 360, Wl = Hl * 579 / 1447;
+// Gerätewagen hinten rechts, leicht kleiner (Tiefe)
+const Hc = 270, Wc = Hc * 1015 / 1480;
+image(world, '../assets/cut/injector_1.png', 1075 - Wc, gy - Hc + 4, Wc, Hc);
+image(world, '../assets/cut/injector_2.png', lx - Wl * 0.52, gy - Hl * 0.875, Wl, Hl);
+// Baumpfleger hält die Lanze
+figure(world, 4, lx + 108, gy + 4, 360, { anchorX: 0.5 });
+// Hand-Annotationen
+const ann = el('g', {}, svg);
+text(ann, 'verdichtet', 70, gy - 70, { size: 52, family: 'Caveat', weight: 700, fill: C.ink, ls: 0 });
+inkStroke(ann, wobble([[140, gy - 55], [150, gy - 10], [160, gy + 40]], rng(3), 2, 12), { w: 3, seed: 81 });
+inkStroke(ann, [[146, gy + 26], [160, gy + 44], [172, gy + 24]], { w: 3, seed: 82 });
+text(ann, 'gelockert', 935, gy + 225, { size: 52, family: 'Caveat', weight: 700, fill: C.orange, ls: 0, anchor: 'middle' });
+
+// Typografie
+const ty = el('g', {}, svg);
+inkStroke(ty, [[80, 152], [140, 150]], { w: 7, color: C.orange, taper: false, seed: 90, filter: 'url(#marker)' });
+text(ty, '03  ·  BODENBELÜFTUNG', 162, 164, { size: 38, weight: 600, fill: C.orange, ls: 0.22 });
+text(ty, 'BODENBELÜFTUNG', 76, 290, { size: 128, weight: 700, ls: 0.01 });
+text(ty, 'MIT DRUCKLUFT', 76, 410, { size: 128, weight: 700, ls: 0.01 });
+inkStroke(ty, wobble([[80, 438], [300, 432], [560, 440], [690, 434]], rng(9), 2, 40), { w: 9, color: C.orange, seed: 91, filter: 'url(#marker)' });
+// Untertitel-Etikett (Schutzzone beachtet: endet über y=1540)
+const sub = el('g', { filter: 'url(#softShadow)' }, svg);
+const bx = 80, by = 1452, bw = 800, bh = 104;
+el('path', { d: `M${bx+6},${by+3} L${bx+bw-4},${by} L${bx+bw+2},${by+bh-2} L${bx-2},${by+bh+3} Z`, fill: '#FBFAF6' }, sub);
+el('rect', { x: bx - 2, y: by + 2, width: 8, height: bh, fill: C.orange }, svg);
+text(svg, 'Mit unserem VOGT Geo Injector Maxi bringen wir', bx + 28, by + 42, { size: 33, family: 'Barlow', weight: 500, ls: 0 });
+text(svg, 'gezielt Druckluftimpulse in den Boden ein.', bx + 28, by + 82, { size: 33, family: 'Barlow', weight: 500, ls: 0 });
+vignette(svg);
+window.READY = true;
+</script></body></html>
