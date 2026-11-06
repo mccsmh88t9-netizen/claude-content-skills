@@ -1,7 +1,7 @@
 <!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="fonts.css"></head>
 <body><svg id="s" width="1080" height="1920" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg"></svg>
 <script type="module">
-import { C, W, H, el, defs, paper, vignette, text, inkStroke, line, wobble, rng, smooth } from './lib.js';
+import { C, W, H, el, defs, paper, vignette, text, inkStroke, line, wobble, rng, smooth, image, figure } from './lib.js';
 import { drawTree, drawRoots, drawGround, drawSection, drawPulse } from './world.js';
 const svg = document.getElementById('s');
 await document.fonts.load('700 100px BarlowCondensed'); await document.fonts.load('600 40px BarlowCondensed');
@@ -16,17 +16,23 @@ drawTree(world, { x: 380, groundY: gy, s: 0.84 });
 drawGround(world, { y: gy });
 // Injektionspunkt + Lanze (Platzhalter in Code, finale Lanze aus Geo-Injector-Zeichnung)
 drawPulse(world, { x: lx, y: tip - 6, k: 1, maxR: 150 });
-inkStroke(world, [[lx, gy - 150], [lx, tip]], { w: 5, seed: 5, taper: false });
-inkStroke(world, [[lx - 34, gy - 22], [lx, gy - 46], [lx + 34, gy - 22]], { w: 4.5, seed: 6 });
-inkStroke(world, [[lx - 40, gy - 150], [lx + 40, gy - 150]], { w: 6, seed: 7, taper: false });
+// Lanze unter der Erde (Code) + Lanze über der Erde (Zeichnung)
+inkStroke(world, [[lx, gy + 2], [lx, tip]], { w: 5, seed: 5, taper: false });
+inkStroke(world, [[lx - 6, tip - 14], [lx, tip + 8], [lx + 6, tip - 14]], { w: 3, seed: 6 });
+const Hl = 300, Wl = Hl * 579 / 1447;
+// Gerätewagen hinten rechts, leicht kleiner (Tiefe)
+const Hc = 250, Wc = Hc * 1015 / 1480;
+image(world, '../assets/cut/injector_1.png', 1050 - Wc, gy - Hc + 6, Wc, Hc);
+image(world, '../assets/cut/injector_2.png', lx - Wl * 0.52, gy - Hl * 0.875, Wl, Hl);
+// Baumpfleger hält die Lanze
+figure(world, 4, lx + 92, gy + 4, 300, { anchorX: 0.5 });
 // Hand-Annotationen
 const ann = el('g', {}, svg);
 text(ann, 'verdichtet', 70, gy - 70, { size: 52, family: 'Caveat', weight: 700, fill: C.ink, ls: 0 });
 inkStroke(ann, wobble([[140, gy - 55], [150, gy - 10], [160, gy + 40]], rng(3), 2, 12), { w: 3, seed: 81 });
 inkStroke(ann, [[146, gy + 26], [160, gy + 44], [172, gy + 24]], { w: 3, seed: 82 });
-text(ann, 'gelockert', 890, gy - 230, { size: 52, family: 'Caveat', weight: 700, fill: C.orange, ls: 0, anchor: 'middle' });
-inkStroke(ann, wobble([[905, gy - 210], [920, gy - 120], [900, gy + 60]], rng(4), 2, 12), { w: 3, seed: 83, color: C.orange, filter: 'url(#marker)' });
-inkStroke(ann, [[886, gy + 40], [900, gy + 62], [916, gy + 42]], { w: 3, seed: 84, color: C.orange, filter: 'url(#marker)' });
+text(ann, 'gelockert', 640, gy + 330, { size: 52, family: 'Caveat', weight: 700, fill: C.orange, ls: 0, anchor: 'middle' });
+
 // Typografie
 const ty = el('g', {}, svg);
 inkStroke(ty, [[80, 152], [140, 150]], { w: 7, color: C.orange, taper: false, seed: 90, filter: 'url(#marker)' });
