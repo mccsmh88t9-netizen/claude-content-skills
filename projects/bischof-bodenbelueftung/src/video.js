@@ -3,7 +3,8 @@ import { C, W, H, el, rng, defs, vignette, smooth, wobble, inkStroke, line, hatc
 import { drawTree, drawRoots, drawGround } from './world.js';
 import TIMING from './timing.json' with { type: 'json' };
 
-export const DURATION = 70.0;
+export const DURATION = 85.05;
+export const SHIFT = 15.05; // Szene 4b eingefügt: 6 Takte
 const GY = 1060, SEC_D = 300, TREE_X = 420, TREE_S = 0.72, INJ_X = 690, INJ_Y = GY + 175;
 const SUB_Y = 1440;
 const sm = (a, b, t) => { const k = clamp((t - a) / (b - a)); return k * k * (3 - 2 * k); };
@@ -56,8 +57,9 @@ function wrap(str, size, maxW) {
   for (const w of words) { const n = cur ? cur + ' ' + w : w; if (measure(n, size, 'Barlow', 500) > maxW && cur) { lines.push(cur); cur = w; } else cur = n; }
   if (cur) lines.push(cur); return lines;
 }
-function subtitles(parent, t) {
-  for (const n of [1, 2, 3, 4, 5]) for (const [s, a, b] of TIMING[n].subs) {
+function subtitles(parent, t, keys = [1, 2, 3, 4, 5]) {
+  for (const n of keys) for (const [s, a, b] of TIMING[n].subs) {
+    if (n === 4 && a > 39) continue;
     const t0 = a - 0.12, t1 = b + 0.25;
     if (t < t0 || t > t1 + 0.3) continue;
     const k = ease.outBack(clamp((t - t0) / 0.35), 1.6), ko = ease.inOutCubic(clamp((t - t1) / 0.25));
@@ -438,7 +440,7 @@ const paperImg = (g) => image(g, '../assets/paper.jpg', 0, 0, W, H);
 function cam(g, cx, cy, z) { g.setAttribute('transform', `translate(${W / 2},${H / 2}) scale(${z}) translate(${-cx},${-cy})`); }
 
 // ---------- Hauptrender ----------
-export function render(svg, t) {
+function renderBase(svg, t) {
   svg.innerHTML = '';
   const fr = Math.round(t * 30);
   defs(svg, 1 + Math.floor(fr / 3) % 6);
@@ -509,16 +511,16 @@ export function render(svg, t) {
     paperImg(g);
     const cg = el('g', {}, g);
     cam(cg, 540, 940, lerp(1.7, 1, ease.outCubic(open)) * (1 + 0.015 * clamp((t - 34) / 10)) * lerp(1, 0.6, close));
-    scene4(cg, t);
+    if (t >= 44.0) macroLife(cg, 59.2); else scene4(cg, t);
     if (R > 1 && R < 1240) {
       inkStroke(svg, blob(cxp, cyp, R, R, rng(9), 40, 0.01).concat([[cxp + R, cyp]]), { w: 7, seed: 600, taper: false });
       inkStroke(svg, blob(cxp, cyp, R + 14, R + 14, rng(10), 40, 0.01).concat([[cxp + R + 14, cyp]]), { w: 2.5, seed: 601, taper: false, color: C.orange, filter: 'url(#marker)' });
     }
-    kicker(ui, '04 · DIE WIRKUNG', t, 34.3, 43.8);
+    kicker(ui, '04 · DIE WIRKUNG', t, 34.3, 39.25);
     const a = W_(4, 'Bodenstruktur') - 0.1;
-    kinetic(ui, 'BODENSTRUKTUR', 76, 290, t, a, 43.7, { size: 118 });
-    const h2 = kinetic(ui, 'VERBESSERN', 76, 410, t, a + 0.3, 43.75, { size: 118, fill: C.ink });
-    if (h2) underline(ui, 80, 440, h2.w, t, a + 0.7, 43.75, 94);
+    kinetic(ui, 'BODENSTRUKTUR', 76, 290, t, a, 39.1, { size: 118 });
+    const h2 = kinetic(ui, 'VERBESSERN', 76, 410, t, a + 0.3, 39.15, { size: 118, fill: C.ink });
+    if (h2) underline(ui, 80, 440, h2.w, t, a + 0.7, 39.15, 94);
     const tp = 35.1; if (t > tp && close < 0.5) { const k = ease.outBack(clamp((t - tp) / 0.55), 1.5); figure(cg, 2, lerp(1350, 1000, k), 1418, 360); }
   }
   // ===== Szene 5 (44.15 – 55.3), Kamerafahrt heraus =====
@@ -605,4 +607,192 @@ export function render(svg, t) {
   image(svg, `../assets/grain${fr % 4}.png`, 0, 0, W, H);
 }
 
-export function grainDefs(svg) {}
+
+// =====================================================================
+// Szene 4b: Messen (STEP Systems Combi 5000) → pH gezielt → Mykorrhiza & Perlhumus
+// =====================================================================
+const Wb = (k, w) => W_(k, w);
+function hyphae(seed) {
+  const r = rng(seed), segs = [];
+  const grow = (x, y, ang, len, depth, order) => {
+    const n = 3; let px = x, py = y, a = ang; const pts = [[x, y]];
+    for (let i = 0; i < n; i++) { a += (r() - .5) * 0.8; px += Math.cos(a) * len / n; py += Math.sin(a) * len / n; pts.push([px, py]); }
+    segs.push({ pts, order });
+    if (depth > 0) { grow(px, py, a + 0.6 + r() * 0.4, len * 0.72, depth - 1, order + 1); grow(px, py, a - 0.6 - r() * 0.4, len * 0.68, depth - 1, order + 1); if (r() < .5) grow(pts[1][0], pts[1][1], a + (r() > .5 ? 1.2 : -1.2), len * 0.5, depth - 1, order + 1); }
+  };
+  for (let i = 0; i < 12; i++) {
+    const x = 120 + i * 72 + r() * 20, y = 1000 + Math.sin(x * 0.012 + 54) * 18;
+    const up = i % 2 ? -1 : 1;
+    grow(x, y, up * (Math.PI / 2) + (r() - .5) * 0.9, 90 + r() * 40, 3, 0);
+  }
+  return segs;
+}
+const HYPH = hyphae(808);
+const PEARLS = (() => { const r = rng(909); return [...Array(9)].map((_, i) => ({ x: 170 + i * 92 + (r() - .5) * 40, y: 640 + r() * 560, d: i * 0.11 })); })();
+function macroLife(g, t) {
+  const p = { x: 80, y: 500, w: 920, h: 880 };
+  const c = el('clipPath', { id: 'm4b' }, g); el('rect', { x: p.x, y: p.y, width: p.w, height: p.h }, c);
+  const G = el('g', { 'clip-path': 'url(#m4b)' }, g);
+  el('rect', { x: p.x, y: p.y, width: p.w, height: p.h, fill: '#EFE7D6' }, G);
+  // Huminsäure-Höfe (unter den Körnern)
+  const tH = Wb('4b3', 'Huminsäuren') - 0.2, tP = Wb('4b3', 'Perlhumus') - 0.1;
+  const halo = el('g', { style: 'mix-blend-mode:multiply' }, G);
+  PEARLS.forEach((q, i) => {
+    const k = ease.outCubic(clamp((t - tP - q.d) / 1.6)); if (k <= 0) return;
+    const b = blob(q.x, q.y, 80 * k, 62 * k, rng(950 + i), 14, 0.15);
+    el('path', { d: smooth(b, true), fill: '#7A4E2A', opacity: 0.22, filter: 'url(#marker)' }, halo);
+  });
+  drawGrains(G, MAC4, { spread: 1.22, cx: 540, cy: 940, grow: 0.92 });
+  rootLine(G, 40, 1040, 1000, 54, { hairs: 1 });
+  // Mykorrhiza-Hyphen wachsen aus der Wurzel
+  const tM = Wb('4b3', 'Mykorrhizapilze') - 0.35;
+  const gk = clamp((t - tM) / 2.2) * 4.2;
+  for (const sgm of HYPH) {
+    const k = clamp(gk - sgm.order); if (k <= 0) continue;
+    const n = sgm.pts.length - 1, f = k * n, i = Math.floor(f), l = f - i;
+    const pts = sgm.pts.slice(0, i + 1); if (i < n) pts.push([lerp(sgm.pts[i][0], sgm.pts[i + 1][0], l), lerp(sgm.pts[i][1], sgm.pts[i + 1][1], l)]);
+    if (pts.length < 2) continue;
+    line(G, pts, { w: 5.2 - sgm.order, color: C.ink, opacity: 0.9, filter: 'url(#ink)' });
+    line(G, pts, { w: 2.6 - sgm.order * 0.4, color: '#FFFFFF', opacity: 1, filter: null });
+  }
+  // Perlhumus-Perlen fallen ein und lösen sich
+  PEARLS.forEach((q, i) => {
+    const kd = ease.outBack(clamp((t - tH - q.d) / 0.7), 1.6); if (kd <= 0) return;
+    const ks = ease.inOutCubic(clamp((t - tP - q.d) / 1.8));
+    const y = lerp(470, q.y, kd), r = lerp(17, 5, ks);
+    el('circle', { cx: q.x, cy: y, r, fill: '#4A2E1B', stroke: C.ink, 'stroke-width': 2.5, filter: 'url(#ink)' }, G);
+    el('circle', { cx: q.x - r * 0.35, cy: y - r * 0.35, r: r * 0.28, fill: '#fff', opacity: 0.45 }, G);
+  });
+  panel(g, p.x, p.y, p.w, p.h, 64);
+  // Notizen
+  const note = (s, x, y, col, t0, arrow, rot = -3) => { const k = ease.outBack(clamp((t - t0) / 0.45), 2); if (k <= 0) return; const gg = el('g', { transform: `translate(${x},${y}) scale(${k}) rotate(${rot})` }, g); el('rect', { x: -12, y: -46, width: measure(s, 54, 'Caveat', 700) + 24, height: 62, fill: C.paper, rx: 8 }, gg); text(gg, s, 0, 0, { size: 54, family: 'Caveat', weight: 700, fill: col, ls: 0 }); if (arrow) inkStroke(gg, arrow, { w: 3.2, color: col, seed: 960 + x, drawn: clamp((t - t0 - 0.2) / 0.4), filter: 'url(#marker)' }); };
+  note('Mykorrhiza', 600, 1300, C.orange, tM + 0.5, [[60, -50], [40, -140], [10, -230]], 3);
+  note('Perlhumus', 120, 600, '#6B4423', tP + 0.1, [[150, 14], [190, 50], [220, 80]], -4);
+}
+function lcd(g, x, y, w, h, t, t0) {
+  // LCD-Inhalt aus Code: Messbalken, dann "pH" + Haken
+  const k = clamp((t - t0) / 2.2);
+  text(g, 'pH', x + w - 8, y + h * 0.32, { size: h * 0.26, weight: 700, fill: '#222', anchor: 'end', family: 'BarlowCondensed', ls: 0.02 });
+  const bw = (w - 24) * k;
+  for (let i = 0; i < 10; i++) { const on = (i + 1) / 10 <= k; el('rect', { x: x + 12 + i * (w - 24) / 10, y: y + h * 0.5, width: (w - 24) / 10 - 4, height: h * 0.28, fill: on ? '#2b2b2b' : '#2b2b2b', opacity: on ? 0.85 : 0.12 }, g); }
+  if (k >= 1) { const kk = ease.outBack(clamp((t - t0 - 2.2) / 0.3), 3); inkStroke(g, [[x + 14, y + h * 0.3], [x + 26, y + h * 0.42], [x + 46, y + h * 0.16]].map(([a, b]) => [lerp(x + 26, a, kk), lerp(y + h * 0.3, b, kk)]), { w: 4, seed: 970, taper: false, color: '#222', filter: null }); }
+}
+function deviceCard(g, t) {
+  const t0 = 40.75, k = ease.outBack(clamp((t - t0) / 0.55), 1.5);
+  if (k <= 0) return;
+  const cx = 340, cy = 690;
+  const G = el('g', { transform: `translate(${cx},${cy}) scale(${k}) rotate(-2) translate(${-cx},${-cy})` }, g);
+  const sg = el('g', { filter: 'url(#softShadow)' }, G);
+  el('rect', { x: 40, y: 475, width: 600, height: 440, rx: 14, fill: '#FBFAF6' }, sg);
+  inkStroke(G, [[40, 475], [640, 477], [638, 915], [42, 913], [40, 475]], { w: 3.5, seed: 980, taper: false });
+  // Gerät (KI-Zeichnung) + Beschriftung aus Code
+  const dh = 340, dw = dh * 600 / 767, dx = 58, dy = 495;
+  image(G, '../assets/cut/combi.png', dx, dy, dw, dh);
+  const sc = dh / 767; // Pixel in combi.png (600×767)
+  const L = (x, y) => [dx + x * sc, dy + y * sc];
+  const f = 600 / 1074; // Freisteller-Original → combi.png
+  const [lx0, ly0] = L(131 * f, 390 * f), [lx1, ly1] = L(593 * f, 644 * f);
+  lcd(G, lx0 + 4, ly0 + 4, lx1 - lx0 - 8, ly1 - ly0 - 8, t, 41.1);
+  const [sx, sy] = L(362 * f, 735 * f); text(G, 'STEP SYSTEMS', sx, sy, { size: 15, weight: 700, fill: '#fff', anchor: 'middle', ls: 0.06 });
+  const [px, py] = L(360 * f, 880 * f); text(G, 'COMBI 5000', px, py, { size: 17, weight: 700, fill: '#fff', anchor: 'middle', ls: 0.04 });
+  text(G, 'STEP Systems Combi 5000', 64, 896, { size: 32, weight: 600, fill: C.ink, ls: 0.01 });
+  // pH-Skala (vertikal): unten sauer, oben basisch
+  const bx = 470, by0 = 505, by1 = 845;
+  const gid = 'phg'; const lg = el('linearGradient', { id: gid, x1: 0, x2: 0, y1: 1, y2: 0 }, G);
+  el('stop', { offset: 0, 'stop-color': C.orange }, lg); el('stop', { offset: 0.5, 'stop-color': C.green }, lg); el('stop', { offset: 1, 'stop-color': C.water }, lg);
+  el('rect', { x: bx, y: by0, width: 26, height: by1 - by0, rx: 13, fill: `url(#${gid})`, opacity: 0.85, filter: 'url(#marker)' }, G);
+  inkStroke(G, [[bx, by0 + 13], [bx, by1 - 13]], { w: 2.5, seed: 981, taper: false }); inkStroke(G, [[bx + 26, by0 + 13], [bx + 26, by1 - 13]], { w: 2.5, seed: 982, taper: false });
+  text(G, 'basisch', bx + 40, by0 + 22, { size: 34, family: 'Caveat', weight: 700, fill: C.water, ls: 0 });
+  text(G, 'neutral', bx + 40, (by0 + by1) / 2 + 10, { size: 34, family: 'Caveat', weight: 700, fill: C.graphite, ls: 0 });
+  text(G, 'sauer', bx + 40, by1, { size: 34, family: 'Caveat', weight: 700, fill: C.orange, ls: 0 });
+  // Zeiger: pendelt, kommt zur Ruhe (kein konkreter Messwert)
+  const tm = 41.3; const km = clamp((t - tm) / 2.6);
+  const pos = 0.5 + Math.sin((t - tm) * 6) * 0.38 * Math.exp(-(t - tm) * 1.3) * (t > tm ? 1 : 0) + 0.12 * ease.outCubic(km);
+  const my = lerp(by1 - 10, by0 + 10, pos);
+  if (t > tm) inkStroke(G, [[bx - 26, my - 12], [bx - 4, my], [bx - 26, my + 12], [bx - 26, my - 12]], { w: 4, seed: 983, taper: false });
+  // Pfeile senken / heben
+  const arr = (t0, up) => { const ka = ease.outBack(clamp((t - t0) / 0.45), 2); if (ka <= 0) return; const ax = bx - 66, y0 = up ? 640 : 710, y1 = up ? 560 : 790; const ag = el('g', { opacity: clamp(ka * 2) }, G); text(ag, up ? 'heben' : 'senken', ax - 14, up ? 548 : 830, { size: 34, family: 'Caveat', weight: 700, fill: C.orange, anchor: 'end', ls: 0 }); inkStroke(ag, [[ax, y0], [ax, lerp(y0, y1, ka)]], { w: 6, color: C.orange, seed: up ? 984 : 985, taper: false, filter: 'url(#marker)' }); inkStroke(ag, [[ax - 14, lerp(y0, y1, ka) + (up ? 16 : -16)], [ax, lerp(y0, y1, ka)], [ax + 14, lerp(y0, y1, ka) + (up ? 16 : -16)]], { w: 6, color: C.orange, seed: up ? 986 : 987, taper: false, filter: 'url(#marker)' }); };
+  arr(Wb('4b2', 'pH-senkende') - 0.1, false); arr(Wb('4b2', 'pH-hebende') - 0.1, true);
+}
+function world4b(g, t) {
+  const st = { treeDrawn: 1, greens: 1, groundDrawn: 1, secOpen: 1, compactX: 1100, loosenR: 186, persist: 0.5, pulses: [] };
+  overview(g, t, st);
+  // Messfühler im Boden (Code) + Kabel zur Hand
+  const PX = 560, kp = ease.inOutCubic(clamp((t - 40.5) / 0.6));
+  const tipY = lerp(GY - 40, GY + 120, kp);
+  inkStroke(g, [[PX, tipY - 160], [PX, tipY]], { w: 4, seed: 990, taper: false, color: '#8a8f94' });
+  inkStroke(g, [[PX - 5, tipY - 12], [PX, tipY + 8], [PX + 5, tipY - 12]], { w: 2.5, seed: 991 });
+  el('rect', { x: PX - 9, y: tipY - 230, width: 18, height: 74, rx: 8, fill: '#1B1C1A' }, g);
+  // Baumpfleger kniend
+  const FX = 760; figure(g, 7, FX, GY + 4, 250);
+  const [pw, ph] = [727, 940]; const s = 250 / (ph - 24);
+  const hx = FX - pw * s * 0.5 + 66 * s, hy = GY + 4 - ph * s + 12 * s + 262 * s;
+  image(g, '../assets/cut/combi.png', hx - 20, hy - 46, 36, 46);
+  line(g, [[PX, tipY - 230], [PX + 30, tipY - 280], [hx - 40, hy - 70], [hx - 4, hy - 46]], { w: 3, color: C.ink, opacity: 0.95, filter: 'url(#ink)' });
+  // Einbringen: Körnchen durch den Kanal
+  const tg = Wb('4b2', 'gezielt') - 0.9;
+  if (t > tg) {
+    line(g, [[PX, GY - 10], [PX, GY + 150]], { w: 3, color: C.orange, dash: '10 10', filter: 'url(#marker)', opacity: 0.9 });
+    const r = rng(77);
+    for (let i = 0; i < 18; i++) {
+      const k = ((t - tg) * 0.7 + i / 18) % 1; const x = PX + (r() - .5) * 26 + Math.sin(k * 9 + i) * 6, y = GY - 10 + k * 170;
+      el('rect', { x: x - 5, y: y - 5, width: 10, height: 10, rx: 2, fill: i % 2 ? '#C9B26A' : '#9AA4A8', stroke: C.ink, 'stroke-width': 1.4, opacity: Math.sin(k * Math.PI), transform: `rotate(${i * 37} ${x} ${y})` }, g);
+    }
+  }
+  // Notiz an der Kabelhand
+  const tn = 41.0, kn = ease.outBack(clamp((t - tn) / 0.4), 2);
+  if (kn > 0) inkStroke(g, [[640, 760], [hx - 50, hy - 110], [hx - 24, hy - 60]], { w: 3, color: C.orange, seed: 995, drawn: clamp((t - tn) / 0.6), filter: 'url(#marker)' });
+}
+function render4b(svg, t) {
+  svg.innerHTML = '';
+  const fr = Math.round(t * 30);
+  defs(svg, 1 + Math.floor(fr / 3) % 6);
+  paperImg(svg);
+  const stage = el('g', {}, svg), ui = el('g', {}, svg);
+  // Übergang aus Szene 4: Seite schiebt nach oben (Push)
+  const pk = ease.inOutCubic(clamp((t - 39.6) / 0.75));
+  if (pk < 1) {
+    const g4 = el('g', { transform: `translate(0,${-pk * H})` }, stage);
+    paperImg(g4); const cg = el('g', {}, g4); cam(cg, 540, 940, 1.015 * (1 + 0.015 * clamp((t - 34) / 10)));
+    scene4(cg, Math.min(t, 39.6));
+  }
+  const lensOpen = ease.inOutCubic(clamp((t - 52.2) / 0.95));
+  const gN = el('g', { transform: `translate(0,${(1 - pk) * H})` }, stage);
+  paperImg(gN);
+  if (lensOpen < 1) {
+    const cg = el('g', {}, gN); cam(cg, 540, 960, lerp(1, 1.06, clamp((t - 40) / 12)) * lerp(1, 1.6, lensOpen));
+    world4b(cg, t);
+    deviceCard(gN, t);
+  }
+  if (pk < 1) inkStroke(svg, [[-20, (1 - pk) * H + 2], [540, (1 - pk) * H - 4], [1100, (1 - pk) * H + 3]], { w: 5, seed: 999, taper: false });
+  // Linse in die Wurzelzone → Mykorrhiza & Perlhumus
+  if (lensOpen > 0) {
+    const R = lerp(0, 1250, lensOpen), cxp = lerp(560, 540, lensOpen), cyp = lerp(1180, 940, lensOpen);
+    const id = 'lens4b'; const m = el('mask', { id, maskUnits: 'userSpaceOnUse', x: 0, y: 0, width: W, height: H }, svg);
+    el('circle', { cx: cxp, cy: cyp, r: Math.max(0.1, R), fill: '#fff' }, m);
+    const g = el('g', { mask: `url(#${id})` }, stage);
+    paperImg(g);
+    const cg = el('g', {}, g); cam(cg, 540, 940, lerp(1.7, 1, ease.outCubic(lensOpen)) * (1 + 0.012 * clamp((t - 53) / 6)));
+    macroLife(cg, t);
+    if (R > 1 && R < 1240) {
+      inkStroke(svg, blob(cxp, cyp, R, R, rng(9), 40, 0.01).concat([[cxp + R, cyp]]), { w: 7, seed: 600, taper: false });
+      inkStroke(svg, blob(cxp, cyp, R + 14, R + 14, rng(10), 40, 0.01).concat([[cxp + R + 14, cyp]]), { w: 2.5, seed: 601, taper: false, color: C.orange, filter: 'url(#marker)' });
+    }
+    const tp = 53.4; if (t > tp) { const k = ease.outBack(clamp((t - tp) / 0.55), 1.5); figure(cg, 2, lerp(1350, 1000, k), 1418, 360); }
+  }
+  kicker(ui, '04 · GEZIELT ERGÄNZEN', t, 40.15, 58.75);
+  kinetic(ui, 'MESSEN', 76, 290, t, 40.75, 51.9, { size: 118 });
+  const h2 = kinetic(ui, 'UND GEZIELT ERGÄNZEN', 76, 376, t, Wb('4b2', 'Ergebnis') - 0.2, 51.95, { size: 62, weight: 600 });
+  if (h2) underline(ui, 80, 404, h2.w, t, Wb('4b2', 'Ergebnis') + 0.4, 51.95, 96);
+  kinetic(ui, 'BODENLEBEN', 76, 290, t, Wb('4b3', 'Mykorrhizapilze') - 0.4, 58.6, { size: 118 });
+  const h4 = kinetic(ui, 'UNTERSTÜTZEN', 76, 410, t, Wb('4b3', 'Mykorrhizapilze') - 0.1, 58.65, { size: 118 });
+  if (h4) underline(ui, 80, 440, h4.w, t, Wb('4b3', 'Bodenleben') - 0.2, 58.65, 97);
+  subtitles(ui, t, ['4b1', '4b2', '4b3']);
+  vignette(svg);
+  image(svg, `../assets/grain${fr % 4}.png`, 0, 0, W, H);
+}
+export function render(svg, t) {
+  if (t < 39.6) return renderBase(svg, t);
+  if (t < 59.2) return render4b(svg, t);
+  return renderBase(svg, t - SHIFT);
+}

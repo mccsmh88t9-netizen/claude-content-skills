@@ -223,7 +223,7 @@ export function text(parent, str, x, y, { size = 100, family = 'BarlowCondensed'
 }
 
 // ---------- Bild-Assets (KI-Zeichnungen, freigestellt) ----------
-export const POSES = { 1: [290, 664], 2: [410, 667], 3: [432, 669], 4: [440, 678], 5: [306, 736], 6: [358, 729] };
+export const POSES = { 1: [290, 664], 2: [410, 667], 3: [432, 669], 4: [440, 678], 5: [306, 736], 6: [358, 729], 7: [727, 940], 8: [551, 1240] };
 // Druckfläche [x, y, breite, höhe] im Freisteller (Brust links bzw. Rücken)
 export const PATCH = { 1: [168, 176, 46, 24], 2: [274, 180, 46, 24], 5: [86, 205, 134, 60], 6: [176, 200, 48, 25] };
 export function image(parent, href, x, y, w, h, extra = {}) {

@@ -6,6 +6,9 @@ VO = {
  4: ("Ziel der Behandlung ist es, die Bodenstruktur und den Gasaustausch zu verbessern. | Je nach Standort können zusätzlich geeignete Bodenhilfsstoffe eingebracht werden.", 34.23),
  5: ("Ein funktionsfähiger Boden ist eine wichtige Voraussetzung für gesunde Wurzeln – | und für die langfristige Entwicklung unserer Bäume.", 46.14),
  6: ("Bischof Baumpflege. | Ihr Profi für den Baum.", 58.90),
+ '4b1': ("Vor Ort messen wir zuerst den pH-Wert – | mit dem STEP Systems Combi 5000.", 40.20),
+ '4b2': ("Je nach Ergebnis bringen wir pH-senkende oder pH-hebende Bodenhilfsstoffe gezielt ein.", 46.00),
+ '4b3': ("Außerdem können Mykorrhizapilze und Huminsäuren wie Perlhumus das Bodenleben unterstützen.", 52.70),
 }
 def regions(f):
     out = subprocess.run(['ffmpeg','-v','info','-i',f,'-af','silencedetect=noise=-38dB:d=0.18','-f','null','-'],capture_output=True,text=True).stderr
