@@ -12,7 +12,7 @@ const fs = require('fs');
     p.on('pageerror', e => console.log('ERR', e.message));
     await p.goto('http://localhost:8123/src/video.html'); await p.waitForFunction('window.READY === true', null, { timeout: 60000 });
     while (idx < times.length) {
-      const f = times[idx++];
+      const f = times[idx++]; if (fs.existsSync(`${out}/f${String(f).padStart(5, '0')}.png`)) continue;
       await p.evaluate(t => window.renderAt(t), f / 30);
       await p.screenshot({ path: `${out}/f${String(f).padStart(5, '0')}.png` });
       if (f % 60 === 0) console.log('frame', f, ((Date.now() - t0) / 1000).toFixed(0) + 's');
