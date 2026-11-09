@@ -223,18 +223,19 @@ export function text(parent, str, x, y, { size = 100, family = 'BarlowCondensed'
 }
 
 // ---------- Bild-Assets (KI-Zeichnungen, freigestellt) ----------
-export const POSES = { bp_1: [322, 800], bp_2: [342, 800], bp_3: [387, 800], bp_4: [564, 564], bl_1: [259, 800], bl_2: [397, 800], bl_3: [432, 800], 1: [290, 664], 2: [410, 667], 3: [432, 669], 4: [440, 678], 5: [306, 736], 6: [358, 729], 7: [727, 940], 8: [551, 1240] };
+export const POSES = { bp_1: [322, 800], bp_2: [342, 800], bp_3: [387, 800], bp_4: [564, 564], bl_1: [259, 800], bl_2: [397, 800], bl_3: [432, 800], 1: [290, 664], 2: [410, 667], 3: [432, 669], 4: [440, 678], 5: [306, 736], 6: [356, 727], 7: [727, 940], 8: [551, 1240] };
 // Druckfläche [x, y, breite, höhe] im Freisteller (Brust links bzw. Rücken)
 export const PATCH = { bp_1: [198, 194, 44, 23], bp_2: [222, 206, 40, 21], bp_3: [207, 190, 48, 24], 1: [168, 176, 46, 24], 2: [274, 180, 46, 24], 5: [86, 205, 134, 60], 6: [176, 200, 48, 25] };
 export function image(parent, href, x, y, w, h, extra = {}) {
   return el('image', { href, x, y, width: w, height: h, preserveAspectRatio: 'none', ...extra }, parent);
 }
 // Figur: Füße (Bildunterkante minus Rand) auf (fx, fy); h = sichtbare Körperhöhe
-export function figure(parent, pose, fx, fy, h, { flip = false, anchorX = 0.5, label = true } = {}) {
+export function figure(parent, pose, fx, fy, h, { flip = false, anchorX = 0.5, label = true, shadow = true } = {}) {
   const [pw, ph] = POSES[pose];
   const s = h / (ph - 24);
   const w = pw * s, H = ph * s;
   const g = el('g', { transform: `translate(${fx},${fy}) ${flip ? 'scale(-1,1)' : ''}` }, parent);
+  if (shadow) el('ellipse', { cx: (0.5 - anchorX) * w, cy: -2, rx: w * 0.42, ry: Math.max(5, h * 0.022), fill: '#4a3c2c', opacity: 0.2, filter: 'url(#pencil)' }, g);
   image(g, `../assets/cut/${typeof pose === 'number' ? 'pose_' + pose : pose}.png`, -w * anchorX, -H + 12 * s, w, H);
   if (label && PATCH[pose]) {
     const [px, py, qw, qh] = PATCH[pose];

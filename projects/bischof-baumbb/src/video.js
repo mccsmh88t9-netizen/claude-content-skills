@@ -197,7 +197,7 @@ function pitDashed(g, k) { if (k <= 0) return; line(g, [[745, GY + 2], [760, GY 
 function materials(g, k) {
   if (k <= 0) return;
   const kk = ease.outBack(clamp(k), 1.8);
-  const mg = el('g', { transform: `translate(980,${GY}) scale(${kk}) translate(-980,${-GY})` }, g);
+  const mg = el('g', { transform: `translate(1040,${GY}) scale(${kk * 0.8}) translate(-960,${-GY})` }, g);
   el('rect', { x: 900, y: GY - 70, width: 120, height: 66, fill: '#D8B98A', stroke: C.ink, 'stroke-width': 2.6, filter: 'url(#ink)' }, mg);
   line(mg, [[904, GY - 66], [1016, GY - 8]], { w: 2, color: C.ink, opacity: 0.6 }); line(mg, [[1016, GY - 66], [904, GY - 8]], { w: 2, color: C.ink, opacity: 0.6 });
   [[930, GY - 92], [965, GY - 92], [1000, GY - 92], [948, GY - 122], [983, GY - 122]].forEach(([x, y], i) => { el('circle', { cx: x, cy: y, r: 17, fill: '#B9C2C7', stroke: C.ink, 'stroke-width': 2.6, filter: 'url(#ink)' }, mg); el('circle', { cx: x, cy: y, r: 8, fill: 'none', stroke: C.ink, 'stroke-width': 1.6 }, mg); });
@@ -306,7 +306,7 @@ function planMarks(g, t, { tK, tS, tC, tF }) {
     line(g, pts.slice(0, n), { w: 4, color: C.ink, opacity: 0.95 });
     for (let i = 0; i < n; i += 5) { const [px, py] = pts[i]; inkStroke(g, [[px - 7, py - 7], [px + 7, py + 7]], { w: 2.6, seed: 740 + i, taper: false }); inkStroke(g, [[px + 7, py - 7], [px - 7, py + 7]], { w: 2.6, seed: 760 + i, taper: false }); }
     note(g, t, 'Baumschutzzaun', 400, 1302, C.ink, tF + 0.5, { size: 44, rot: -2 });
-    note(g, t, 'Lösung abstimmen', 640, 1240, C.orange, tF + 0.9, { size: 44, rot: -2, arrow: [[-20, -40], [-30, -150], [-10, -280]] });
+    note(g, t, 'Lösung abstimmen', 455, 1236, C.orange, tF + 0.9, { size: 44, rot: -2, arrow: [[175, -46], [180, -200], [168, -440]] });
   }
 }
 
@@ -353,7 +353,7 @@ function closeSoil(g, t, { dig = 0, heap = 0, orange = 0, markers = 0, trace = 0
   // geplante Leitung (gestrichelt)
   if (plannedK > 0 && dig < 0.05) { line(g, [[TR.x0, NG], [TR.x0, TR.bot], [TR.x1, TR.bot], [TR.x1, NG]], { w: 3.5, color: C.ink, dash: '14 10', drawn: plannedK, opacity: 0.85 }); }
   // Aushub
-  if (heap > 0) { const hb = []; for (let a = 0; a <= 1.0001; a += 0.05) hb.push([lerp(820, 1000, a), NG - Math.sin(a * Math.PI) * 70 * heap]); el('path', { d: smooth(hb) + 'Z', fill: '#CDB994', opacity: 0.85 }, g); inkStroke(g, hb, { w: 3.5, seed: 880, taper: false }); }
+  if (heap > 0) { const hb = []; for (let a = 0; a <= 1.0001; a += 0.05) hb.push([lerp(812, 915, a), NG - Math.sin(a * Math.PI) * 58 * heap]); el('path', { d: smooth(hb) + 'Z', fill: '#CDB994', opacity: 0.85 }, g); inkStroke(g, hb, { w: 3.5, seed: 880, taper: false }); }
   // Marker + Wurzelverlauf
   if (markers > 0) ROOTS.forEach((R, i) => {
     const pts = rootPath(R, i), mx = 695, my = R.y + (mx / 1080) * 40 + Math.sin(mx * 0.01 + i * 1.7) * 14;
@@ -410,13 +410,13 @@ function stSite(t, phase) {
     s.fence = K(t, W_(3, 'Schutzbereichen') - 0.4, 2.2, ease.linear || (x => x));
     s.stamm = K(t, W_(3, 'Stamm') - 0.2, 0.8);
     s.mat = K(t, W_(3, 'Vorgaben') - 0.2, 0.5);
-    s.vehicle = { x: lerp(1300, 880, ease.outCubic(clamp((t - 25.2) / 2.2))), s: 0.5 };
+    s.vehicle = { x: lerp(1350, 830, ease.outCubic(clamp((t - 25.1) / 1.5))) + lerp(0, 600, ease.inOutCubic(clamp((t - 27.0) / 1.2))), s: 0.5 };
   }
-  if (phase === 6) { s.fence = 1; s.stamm = 1; s.mat = 1; s.vehicle = { x: 880, s: 0.5 }; s.bld = { plan: 1, built: 0.55 }; s.pit = 0; }
+  if (phase === 6) { s.fence = 1; s.stamm = 1; s.mat = 1; s.vehicle = null; s.bld = { plan: 1, built: 0.55 }; s.pit = 0; }
   if (phase === 7) {
     const kf = K(t, 73.4, 2.0, ease.inOutCubic);
     s.fence = 1 - K(t, 74.0, 0.9, ease.inOutCubic); s.stamm = 1 - K(t, 74.2, 0.8, ease.inOutCubic); s.mat = 1 - K(t, 73.8, 0.6, ease.inOutCubic);
-    s.vehicle = { x: lerp(880, 1400, K(t, 73.5, 1.2, ease.inOutCubic)), s: 0.5 }; s.pit = 0;
+    s.vehicle = null; s.pit = 0;
     s.bld = { plan: 1, built: lerp(0.55, 1, kf), finish: K(t, 74.6, 1.6) };
     s.greenBoost = K(t, W_(7, 'wertvolle') - 0.2, 1.2);
   }
@@ -484,7 +484,7 @@ export function render(svg, t) {
     fence(cg, s.fence, t);
     // Bauleiter + Baumpfleger mit Plan
     const tp = W_(3, 'Vorgaben') - 0.6;
-    if (t > tp) { const k = ease.outBack(clamp((t - tp) / 0.6), 1.3); figure(cg, 'bl_3', lerp(-200, 790, k), GY + 4, 300); figure(cg, 'bp_3', lerp(1400, 975, k), GY + 4, 300); }
+    if (t > tp) { const k = ease.outBack(clamp((t - tp) / 0.6), 1.3); figure(cg, 'bl_3', lerp(-200, 765, k), GY + 4, 300); figure(cg, 'bp_3', lerp(1400, 915, k), GY + 4, 300); }
     // Ausnahme: lastverteilender Überfahrschutz
     card(ui, t, W_(3, 'Boden') - 0.9, 34.9, 560, 470, 470, 300, 2, (G) => {
       text(G, 'Ausnahme nach Abstimmung:', 584, 515, { size: 30, weight: 600, fill: C.graphite, ls: 0.02 });
@@ -517,7 +517,7 @@ export function render(svg, t) {
     // Figur: kniend mit Handschaufel → stehend mit Tablet
     const tSw = W_(4, 'Grundlage') - 0.6;
     if (t > tD0 - 0.8 && t < tSw) { const k = ease.outBack(clamp((t - tD0 + 0.8) / 0.5), 1.3); const dg = el('g', { transform: `rotate(${Math.sin(t * 7) * 1.6} 520 ${NG})` }, cg); figure(dg, 'bp_4', lerp(-260, 470, k), NG + 6, 270, { flip: true, label: false }); }
-    if (t >= tSw && lens < 0.5) { const k = ease.outBack(clamp((t - tSw) / 0.5), 1.4); figure(cg, 'bp_1', lerp(1400, 945, k), NG + 4, 330); }
+    if (t >= tSw && lens < 0.5) { const k = ease.outBack(clamp((t - tSw) / 0.5), 1.4); figure(cg, 'bp_1', lerp(1400, 1000, k), NG + 4, 330); }
     // Dokumentation: Wurzellage auf dem Tablet
     card(ui, t, tSw + 0.3, W_(5, 'Eingriffe') - 0.3, 60, 470, 470, 290, -2, (G) => {
       text(G, 'Wurzellage', 86, 518, { size: 38, weight: 700, fill: C.ink, ls: 0.02 });
@@ -570,12 +570,12 @@ export function render(svg, t) {
     site(cg, t, s);
     fence(cg, s.fence, t, { checks: phase === 6 ? K(t, W_(6, 'Schutzmaßnahmen') - 0.4, 1.0, x => x) : 0 });
     if (phase === 6) {
-      figure(cg, 'bl_2', 785, GY + 4, 300);
+      figure(cg, 'bl_2', 765, GY + 4, 300);
       const tPh = W_(6, 'dokumentieren') - 0.2;
-      figure(cg, t < tPh ? 'bp_3' : 'bp_2', 980, GY + 4, 300);
-      if (t > tPh + 0.3 && t < tPh + 0.6) { const k = Math.sin(clamp((t - tPh - 0.3) / 0.3) * Math.PI); el('circle', { cx: 900, cy: GY - 250, r: 90 * k, fill: '#fff', opacity: 0.85 * k }, cg); }
+      figure(cg, t < tPh ? 'bp_3' : 'bp_2', 915, GY + 4, 300);
+      if (t > tPh + 0.3 && t < tPh + 0.6) { const k = Math.sin(clamp((t - tPh - 0.3) / 0.3) * Math.PI); el('circle', { cx: 850, cy: GY - 250, r: 90 * k, fill: '#fff', opacity: 0.85 * k }, cg); }
       const tb = W_(6, 'beraten') - 0.1; // Gesprächsblasen
-      [[740, GY - 360, 0], [990, GY - 380, 0.35]].forEach(([bx, by, d], i) => { const k = ease.outBack(clamp((t - tb - d) / 0.4), 2) * (1 - clamp((t - tb - 2.2) / 0.3)); if (k <= 0) return; const bg = el('g', { transform: `translate(${bx},${by}) scale(${k})` }, cg); el('ellipse', { cx: 0, cy: 0, rx: 60, ry: 38, fill: '#FBFAF6', stroke: C.ink, 'stroke-width': 3, filter: 'url(#ink)' }, bg); el('path', { d: i ? 'M10,34 L30,64 L-14,36' : 'M-10,34 L-30,64 L14,36', fill: '#FBFAF6', stroke: C.ink, 'stroke-width': 3 }, bg); [-22, 0, 22].forEach(x => el('circle', { cx: x, cy: 0, r: 5, fill: C.ink }, bg)); });
+      [[720, GY - 360, 0], [930, GY - 380, 0.35]].forEach(([bx, by, d], i) => { const k = ease.outBack(clamp((t - tb - d) / 0.4), 2) * (1 - clamp((t - tb - 2.2) / 0.3)); if (k <= 0) return; const bg = el('g', { transform: `translate(${bx},${by}) scale(${k})` }, cg); el('ellipse', { cx: 0, cy: 0, rx: 60, ry: 38, fill: '#FBFAF6', stroke: C.ink, 'stroke-width': 3, filter: 'url(#ink)' }, bg); el('path', { d: i ? 'M10,34 L30,64 L-14,36' : 'M-10,34 L-30,64 L14,36', fill: '#FBFAF6', stroke: C.ink, 'stroke-width': 3 }, bg); [-22, 0, 22].forEach(x => el('circle', { cx: x, cy: 0, r: 5, fill: C.ink }, bg)); });
       card(ui, t, tPh + 0.55, 73.0, 590, 470, 440, 300, 2, (G) => {
         text(G, 'Dokumentation', 612, 515, { size: 36, weight: 700, fill: C.ink, ls: 0.02 });
         el('rect', { x: 612, y: 540, width: 180, height: 200, fill: '#F1F3F0', stroke: C.ink, 'stroke-width': 2.5 }, G); el('circle', { cx: 700, cy: 640, r: 60, fill: 'none', stroke: C.orange, 'stroke-width': 4 }, G); el('circle', { cx: 700, cy: 640, r: 44, fill: '#E3EBD8', stroke: C.ink, 'stroke-width': 2 }, G);
