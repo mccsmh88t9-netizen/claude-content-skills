@@ -1,0 +1,76 @@
+// Bischof Baumpflege – Bodenbelüftung. Ein Frame = render(t). Alles deterministisch.
+import { C, W, H, el, rng, defs, vignette, smooth, wobble, inkStroke, line, hatch, blob, text, ease, clamp, prog, lerp, image, figure } from './lib.js';
+import { drawTree, drawRoots, drawGround } from './world.js';
+import TIMING from './timing.json' with { type: 'json' };
+
+export const DURATION = 85.05;
+export const SHIFT = 15.05; // Szene 4b eingefügt: 6 Takte
+const GY = 1060, SEC_D = 300, TREE_X = 420, TREE_S = 0.72, INJ_X = 690, INJ_Y = GY + 175;
+const SUB_Y = 1440;
+const sm = (a, b, t) => { const k = clamp((t - a) / (b - a)); return k * k * (3 - 2 * k); };
+const W_ = (n, w) => { const L = TIMING[n].words; const f = L.find(x => x[0].replace(/[.,–?]/g, '').startsWith(w)); return f ? f[1] : 0; };
+
+// ---------- Text-Messung ----------
+const cv = document.createElement('canvas').getContext('2d');
+function measure(str, size, family = 'BarlowCondensed', weight = 700, ls = 0) {
+  cv.font = `${weight} ${size}px ${family}`;
+  return cv.measureText(str).width + ls * size * str.length;
+}
+// Kinetische Headline: Buchstaben springen gestaffelt ein, gehen nach oben raus
+function kinetic(parent, str, x, y, t, t0, t1, { size = 110, weight = 700, fill = C.ink, ls = 0.01, family = 'BarlowCondensed', maxW = 920, stagger = 0.028 } = {}) {
+  if (t < t0 || t > t1 + 0.6) return;
+  let s = size; while (measure(str, s, family, weight, ls) > maxW && s > 30) s -= 2;
+  cv.font = `${weight} ${s}px ${family}`;
+  let cx = x;
+  const g = el('g', {}, parent);
+  [...str].forEach((ch, i) => {
+    const w = cv.measureText(ch).width + ls * s;
+    const ki = clamp((t - t0 - i * stagger) / 0.42);
+    const ko = clamp((t - t1 - i * stagger * 0.6) / 0.3);
+    if (ki > 0 && ko < 1 && ch !== ' ') {
+      const yo = (1 - ease.outBack(ki, 2.0)) * s * 0.55 - ease.inOutCubic(ko) * s * 0.5;
+      const rot = (1 - ease.outCubic(ki)) * (i % 2 ? 8 : -6);
+      const tx = el('text', { x: cx, y: y + yo, 'font-family': family, 'font-weight': weight, 'font-size': s, fill, opacity: clamp(ki * 4) * (1 - ko), transform: `rotate(${rot} ${cx + w / 2} ${y})` }, g);
+      tx.textContent = ch;
+    }
+    cx += w;
+  });
+  return { w: cx - x, size: s };
+}
+function kicker(parent, str, t, t0, t1) {
+  if (t < t0 || t > t1 + 0.5) return;
+  const k = ease.outCubic(clamp((t - t0) / 0.5)), ko = ease.inOutCubic(clamp((t - t1) / 0.4));
+  inkStroke(parent, [[80, 150], [80 + 60 * k * (1 - ko), 149]], { w: 7, color: C.orange, taper: false, seed: 90, filter: 'url(#marker)' });
+  const g = el('g', { opacity: k * (1 - ko), transform: `translate(${(1 - k) * -30 - ko * 30},0)` }, parent);
+  text(g, str, 162, 162, { size: 36, weight: 600, fill: C.orange, ls: 0.22 });
+}
+function underline(parent, x, y, w, t, t0, t1, seed = 91) {
+  const k = ease.outCubic(clamp((t - t0) / 0.45)), ko = ease.inOutCubic(clamp((t - t1) / 0.35));
+  if (k <= 0 || ko >= 1) return;
+  const pts = wobble([[x, y], [x + w * 0.4, y - 5], [x + w, y + 2]], rng(seed), 2, 40);
+  inkStroke(parent, pts, { w: 10, color: C.orange, seed, drawn: k * (1 - ko), filter: 'url(#marker)' });
+}
+
+// ---------- Untertitel ----------
+function wrap(str, size, maxW) {
+  const words = str.split(' '); const lines = []; let cur = '';
+  for (const w of words) { const n = cur ? cur + ' ' + w : w; if (measure(n, size, 'Barlow', 500) > maxW && cur) { lines.push(cur); cur = w; } else cur = n; }
+  if (cur) lines.push(cur); return lines;
+}
+function subtitles(parent, t, keys = [1, 2, 3, 4, 5]) {
+  for (const n of keys) for (const [s, a, b] of TIMING[n].subs) {
+    if (n === 4 && a > 39) continue;
+    const t0 = a - 0.12, t1 = b + 0.25;
+    if (t < t0 || t > t1 + 0.3) continue;
+    const k = ease.outBack(clamp((t - t0) / 0.35), 1.6), ko = ease.inOutCubic(clamp((t - t1) / 0.25));
+    const size = 34, lines = wrap(s.replace(' –', ''), size, 860);
+    const bw = Math.max(...lines.map(l => measure(l, size, 'Barlow', 500))) + 56, bh = 26 + lines.length * 44;
+    const y = SUB_Y + (1 - k) * 30 + ko * 16;
+    const g = el('g', { opacity: clamp(k * 3) * (1 - ko) }, parent);
+    const sg = el('g', { filter: 'url(#softShadow)' }, g);
+    el('path', { d: `M${80 + 4},${y + 2} L${80 + bw - 3},${y} L${80 + bw + 1},${y + bh - 1} L${80 - 2},${y + bh + 2} Z`, fill: '#FBFAF6' }, sg);
+    el('rect', { x: 78, y: y + 2, width: 7, height: bh - 2, fill: C.orange }, g);
+    lines.forEach((l, i) => text(g, l, 80 + 30, y + 44 + i * 44, { size, family: 'Barlow', weight: 500, ls: 0 }));
+  }
+}
+

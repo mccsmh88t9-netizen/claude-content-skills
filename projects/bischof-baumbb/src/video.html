@@ -1,0 +1,14 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="fonts.css"></head>
+<body><svg id="s" width="1080" height="1920" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg"></svg>
+<script type="module">
+import { render, DURATION } from './video.js';
+const svg = document.getElementById('s');
+await document.fonts.load('700 100px BarlowCondensed'); await document.fonts.load('600 40px BarlowCondensed'); await document.fonts.load('500 40px BarlowCondensed');
+await document.fonts.load('500 40px Barlow'); await document.fonts.load('700 40px Caveat');
+const imgs = ['bp_1','bp_2','bp_3','bp_4','bl_1','bl_2','bl_3','bagger_1','radlader_1','pose_6'].map(n => '../assets/cut/' + n + '.png').concat(['../assets/logo-circle.png','../assets/paper.jpg','../assets/grain0.png','../assets/grain1.png','../assets/grain2.png','../assets/grain3.png']);
+await Promise.all(imgs.map(u => new Promise(r => { const i = new Image(); i.onload = r; i.onerror = r; i.src = u; })));
+window.DURATION = DURATION;
+window.renderAt = async (t) => { render(svg, t); await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); return true; };
+const q = new URLSearchParams(location.search); if (q.has('t')) await window.renderAt(parseFloat(q.get('t')));
+window.READY = true;
+</script></body></html>
