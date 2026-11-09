@@ -3,3 +3,4 @@ frames/
 frames_t/
 out/*.wav
 out/*.mp4
+*.mov
